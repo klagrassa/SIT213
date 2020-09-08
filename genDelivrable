@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sh cleanAll
+tar cvzf LA_GRASSA-TRITARELLI.tar.gz .

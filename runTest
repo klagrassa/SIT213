@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+# Commandes utilisées pour générer les images utilisées dans le rapport
+
+# Simulation avec message
+./simulateur -mess 10011111 &
+
+# Simulation aléatoire, de taille 100 (par défaut)
+./simulateur &
+
+# Simulation avec message erroné
+./simulateur -mess 02110011 &
+
+# Simulation aléatoire avec taille fixe (32 bits)
+./simulateur -mess 32 &
+
+# Simulation avec semence
+./simulateur -seed 5120 

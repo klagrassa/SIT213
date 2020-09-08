@@ -1,0 +1,12 @@
+#!/bin/bash
+
+param=""
+
+args=("$@")
+ELEMENTS=${#args[@]} 
+ 
+for (( i=0;i<$ELEMENTS;i++)); do 
+    param+=${args[${i}]}" "
+done
+java -cp bin app.Simulateur $param
+
