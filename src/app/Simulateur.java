@@ -96,7 +96,8 @@ public class Simulateur {
 		transmetteurLogique = new TransmetteurParfait();
 
 		// Instancier les sondes
-		if (!affichage){
+		if (affichage){
+			System.out.println(affichage);
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
 		// Connecter la source é une sonde
