@@ -1,5 +1,6 @@
 package app;
 
+import emetteur.Emetteur;
 import sources.*;
 import destinations.*;
 import transmetteurs.*;
@@ -95,15 +96,20 @@ public class Simulateur {
 		// Instancier le transmetteur
 		transmetteurLogique = new TransmetteurParfait();
 
+//		Emetteur emetteur = new Emetteur(5f,-5f,30);
+
 		// Instancier les sondes
 		if (affichage){
-			System.out.println(affichage);
+
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
+//		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
 		// Connecter la source é une sonde
 		source.connecter(sondeSource);
-		// Connecter le transmetteur é une sonde
+		// Connecter le transmetteur é une sond
+//		transmetteurLogique.connecter(emetteur);
 		transmetteurLogique.connecter(sondeDestination);
+//		emetteur.connecter(sondeEmetteur);
 
 		}
 		// Connecter la source au transmetteur
@@ -203,6 +209,7 @@ public class Simulateur {
 		float nbErreur=0;
 		Iterator signalSource = source.getInformationEmise().iterator();
 		Iterator signalDestination = destination.getInformationRecue().iterator();
+
 		while (signalDestination.hasNext()){
 
 			if (signalSource.next() != signalDestination.next()) nbErreur++;
