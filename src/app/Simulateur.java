@@ -93,7 +93,7 @@ public class Simulateur {
 		destination = new DestinationFinale<Boolean>();
 
 		// Instancier le transmetteur
-		transmetteurLogique = new TransmetteurParfait<Boolean, Boolean>();
+		transmetteurLogique = new TransmetteurParfait();
 
 		// Instancier les sondes
 		sondeSource = new SondeLogique("Sonde source", 200);
