@@ -96,21 +96,20 @@ public class Simulateur {
 		transmetteurLogique = new TransmetteurParfait();
 
 		// Instancier les sondes
+		if (!affichage){
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
-
 		// Connecter la source é une sonde
 		source.connecter(sondeSource);
-		
 		// Connecter le transmetteur é une sonde
 		transmetteurLogique.connecter(sondeDestination);
 
+		}
 		// Connecter la source au transmetteur
 		source.connecter(transmetteurLogique);
 
 		// Connecter le transmetteur é la destination
 		transmetteurLogique.connecter(destination);
-
 	}
 
 	/**
@@ -200,16 +199,15 @@ public class Simulateur {
 
 		// on récupère d'abord l'information des sources 
 		// source
-		Information<Boolean> infoEmise = source.getInformationEmise();
-		Information<Boolean> infoRecue = transmetteurLogique.getInformationEmise();
-		int erreur = 0;
-		for (int i = 0; i < infoEmise.nbElements(); i++)
-		{
-			if (!infoEmise.iemeElement(i).equals(infoRecue.iemeElement(i)))
-				erreur++;
-		}		
-		
-		return (float)((erreur/infoEmise.nbElements())*100);
+		float nbErreur=0;
+		Iterator signalSource = source.getInformationEmise().iterator();
+		Iterator signalDestination = destination.getInformationRecue().iterator();
+		while (signalDestination.hasNext()){
+
+			if (signalSource.next() != signalDestination.next()) nbErreur++;
+		}
+
+		return nbErreur/nbBitsMess;
 	}
 
 	/**
