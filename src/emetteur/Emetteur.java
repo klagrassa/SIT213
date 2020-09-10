@@ -7,6 +7,7 @@ import transmetteurs.Transmetteur;
 
 import java.util.Iterator;
 
+
 public class Emetteur extends Transmetteur<Boolean,Float> {
     private Float ampMax;
     private Float ampMin;
@@ -17,8 +18,8 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
 
     /**
      * @param ampMax Amplitude correspondant à un "1" logique
-     * @param ampMin
-     * @param pasEchantillonage
+     * @param ampMin Amplitude correspondant à un "0" logique
+     * @param pasEchantillonage nombre d'échantillons pour représenter un symbole
      */
     public Emetteur(Float ampMax, Float ampMin, int pasEchantillonage) {
         this.ampMax = ampMax;
@@ -27,13 +28,16 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
         this.pasEchantillonage=pasEchantillonage;
     }
 
+    /**
+     * @param information l'information reçue
+     * @throws InformationNonConforme exeception en cas de non conformité
+     */
     @Override
     public void recevoir(Information<Boolean> information) throws InformationNonConforme {
         informationRecue = information;
         informationGenere = new Information<Float>();
-        Iterator it = informationRecue.iterator();
-        while (it.hasNext()) {
-            if (it.next() == Boolean.TRUE) {
+        for (Boolean aBoolean : informationRecue) {
+            if (aBoolean == Boolean.TRUE) {
                 ajouterSymbole(ampMax);
             } else ajouterSymbole(ampMin);
 
@@ -42,6 +46,11 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
 
 
     }
+
+    /**
+     * Ajoute un symbole dans la LinkedList informationGenere
+     * @param amp valeur d'amplitude à ajouter
+     */
     protected void ajouterSymbole(Float amp){
         for (int i = 0; i<pasEchantillonage; i++){
             informationGenere.add(amp);}
