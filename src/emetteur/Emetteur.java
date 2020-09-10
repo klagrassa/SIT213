@@ -15,7 +15,11 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
     private int pasEchantillonage;
 
 
-
+    /**
+     * @param ampMax Amplitude correspondant à un "1" logique
+     * @param ampMin
+     * @param pasEchantillonage
+     */
     public Emetteur(Float ampMax, Float ampMin, int pasEchantillonage) {
         this.ampMax = ampMax;
         this.ampMin = ampMin;
