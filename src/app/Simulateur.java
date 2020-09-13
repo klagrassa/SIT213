@@ -1,6 +1,9 @@
 package app;
 
 import emetteur.Emetteur;
+import emetteur.EmetteurNRZ;
+import emetteur.EmetteurNRZT;
+import emetteur.EmetteurRZ;
 import sources.*;
 import destinations.*;
 import transmetteurs.*;
@@ -37,6 +40,8 @@ public class Simulateur {
 	 * indique si le Simulateur utilise un message généré de manière aléatoire
 	 */
 	private boolean messageAleatoire = true;
+
+
 	/**
 	 * indique si le Simulateur utilise un germe pour initialiser les générateurs
 	 * aléatoires
@@ -52,10 +57,14 @@ public class Simulateur {
 	/** la chaîne de caractères correspondant à m dans l'argument -mess m */
 	private String messageString = "10011111";
 
+	private String formString = "RZ";
+
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
+
+	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean,Float>(1f,0f,30);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
-	private Transmetteur<Boolean, Boolean> transmetteurLogique = null;
+	private Transmetteur transmetteurLogique = null;
 	/** le composant Destination de la chaine de transmission */
 	private Destination<Boolean> destination = null;
 	/** la composante Sonde pour la source de la chaine de transmission */
@@ -85,7 +94,7 @@ public class Simulateur {
 		if (messageAleatoire)
 		{
 			if (aleatoireAvecGerme)
-				source = new SourceAleatoire<Boolean>(seed.intValue(), nbBitsMess);
+				source = new SourceAleatoire<Boolean>(seed, nbBitsMess);
 			else source = new SourceAleatoire<Boolean>(nbBitsMess);
 		}
 		else source = new SourceFixe<Boolean>(messageString);
@@ -94,7 +103,7 @@ public class Simulateur {
 		destination = new DestinationFinale<Boolean>();
 
 		// Instancier le transmetteur
-		transmetteurLogique = new TransmetteurParfait();
+		transmetteurLogique = new TransmetteurParfait<Boolean, Boolean>();
 
 //		Emetteur emetteur = new Emetteur(5f,-5f,30);
 
@@ -103,13 +112,13 @@ public class Simulateur {
 
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
-//		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
 		// Connecter la source é une sonde
 		source.connecter(sondeSource);
 		// Connecter le transmetteur é une sond
-//		transmetteurLogique.connecter(emetteur);
+		transmetteurLogique.connecter(emetteur);
 		transmetteurLogique.connecter(sondeDestination);
-//		emetteur.connecter(sondeEmetteur);
+		emetteur.connecter(sondeEmetteur);
 
 		}
 		// Connecter la source au transmetteur
@@ -145,12 +154,18 @@ public class Simulateur {
 	 *
 	 */
 	public void analyseArguments(String[] args) throws ArgumentsException {
+		Float ampMax = 1f;
+
+		Float ampMin = 0f;
+
+		int pasEch = 30;
 
 		for (int i = 0; i < args.length; i++) {
 
 			if (args[i].matches("-s")) {
 				affichage = true;
-			} else if (args[i].matches("-seed")) {
+			}
+			else if (args[i].matches("-seed")) {
 				aleatoireAvecGerme = true;
 				i++;
 				// traiter la valeur associee
@@ -170,13 +185,55 @@ public class Simulateur {
 					nbBitsMess = args[i].length();
 				} else if (args[i].matches("[0-9]{1,6}")) {
 					messageAleatoire = true;
-					nbBitsMess = Integer.valueOf(args[i]);
+					nbBitsMess = Integer.parseInt(args[i]);
 					if (nbBitsMess < 1)
 						throw new ArgumentsException("Valeur du parametre -mess invalide : " + nbBitsMess);
 				} else
 					throw new ArgumentsException("Valeur du parametre -mess invalide : " + args[i]);
 			}
 
+			else if (args[i].matches("-form")){
+				i++;
+				if (args[i].matches("^N?RZT?$")) {
+					formString = args[i];
+					switch (args[i]){
+
+						case "NRZ" :
+							emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+
+						case "NRZT" :
+							emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
+					}
+				}  else
+					throw new ArgumentsException("Valeur du parametre -form invalide : " + args[i]);
+			}
+			else if (args[i].matches("-nbEch")){
+				i++;
+				if (args[i].matches("^\\d+$")){
+					emetteur.setPasEchantillonage(Integer.parseInt(args[i]));
+				}
+				else throw new ArgumentsException("pas echantillonnage incorect : "+args[i]);
+			}
+			else if (args[i].matches("-ampl")){
+				i++;
+
+				if (args[i].matches("^-?\\d+.?\\d*$")&&args[i+1].matches("^-?\\d+.?\\d*$")){
+
+					ampMin = Float.parseFloat(args[i]);
+					ampMax = Float.parseFloat(args[++i]);
+
+					if (ampMax<ampMin){
+						throw new ArgumentsException("Valeur amplitude -ampl impossible : amplitude max : " + ampMax +" amplitude min : "+ampMin);
+					}
+					else {
+						emetteur.setAmpMax(ampMax);
+						emetteur.setAmpMin(ampMin);
+					}
+				}
+				else
+					throw new ArgumentsException("Valeur du parametre -ampl invalide : " + args[i]);
+
+			}
 			else
 				throw new ArgumentsException("Option invalide :" + args[i]);
 		}

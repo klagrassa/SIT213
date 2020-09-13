@@ -13,23 +13,23 @@ import information.InformationNonConforme;
  * @param <R> : récepteur 
  * @param <E> : émetteur 
  */
-public class TransmetteurParfait extends Transmetteur<Boolean, Boolean> {
+public class TransmetteurParfait <R,E> extends Transmetteur<R,E> {
 
 	public TransmetteurParfait() {
-		
+		super();
 	}
 
 	@Override
-	public void recevoir(Information information) throws InformationNonConforme {
+	public void recevoir(Information<R> information) throws InformationNonConforme {
 		this.informationRecue = information;
 		this.emettre();
 	}
 
 	@Override
 	public void emettre() throws InformationNonConforme {
-		this.informationEmise = this.informationRecue;
+		this.informationEmise = (Information<E>) this.informationRecue;
 		// émission vers les composants connectés
-		for (DestinationInterface<Boolean> destinationConnectee : destinationsConnectees) {
+		for (DestinationInterface<E> destinationConnectee : destinationsConnectees) {
 			destinationConnectee.recevoir(informationEmise);
 		}
 	}

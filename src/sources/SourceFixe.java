@@ -19,7 +19,6 @@ public class SourceFixe<T> extends Source<Boolean> {
 	 */
 	public SourceFixe(String mess) {
 		informationGeneree = new Information<Boolean>();
-		
 		// Encodage pour envoyer
 		for (int i = 0; i < mess.length(); i++)
 		{

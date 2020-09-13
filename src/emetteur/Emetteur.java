@@ -5,15 +5,11 @@ import information.Information;
 import information.InformationNonConforme;
 import transmetteurs.Transmetteur;
 
-import java.util.Iterator;
-
-
-public class Emetteur extends Transmetteur<Boolean,Float> {
-    private Float ampMax;
-    private Float ampMin;
-    private String mode;
-    private Information<Float> informationGenere= null;
-    private int pasEchantillonage;
+public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
+    protected Float ampMax;
+    protected Float ampMin;
+    protected Information<Float> informationGenere= null;
+    protected int pasEchantillonage;
 
 
     /**
@@ -24,8 +20,7 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
     public Emetteur(Float ampMax, Float ampMin, int pasEchantillonage) {
         this.ampMax = ampMax;
         this.ampMin = ampMin;
-        this.mode ="NRZ";
-        this.pasEchantillonage=pasEchantillonage;
+        this.pasEchantillonage = pasEchantillonage;
     }
 
     /**
@@ -43,19 +38,14 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
 
         }
         this.emettre();
-
-
     }
 
     /**
      * Ajoute un symbole dans la LinkedList informationGenere
      * @param amp valeur d'amplitude à ajouter
      */
-    protected void ajouterSymbole(Float amp){
-        for (int i = 0; i<pasEchantillonage; i++){
-            informationGenere.add(amp);}
-    }
 
+    protected abstract void ajouterSymbole(Float amp);
     @Override
     public void emettre() throws InformationNonConforme {
         this.informationEmise = this.informationGenere;
@@ -65,5 +55,15 @@ public class Emetteur extends Transmetteur<Boolean,Float> {
         }
     }
 
+    public void setAmpMax(Float ampMax) {
+        this.ampMax = ampMax;
+    }
 
+    public void setAmpMin(Float ampMin) {
+        this.ampMin = ampMin;
+    }
+
+    public void setPasEchantillonage(int pasEchantillonage) {
+        this.pasEchantillonage = pasEchantillonage;
+    }
 }
