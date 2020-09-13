@@ -19,7 +19,7 @@ public class DestinationFinale<T> extends Destination <T>{
 	}
 	
 	@Override
-	public void recevoir(Information information) throws InformationNonConforme {
+	public void recevoir(Information<T> information) throws InformationNonConforme {
 		this.informationRecue = information;
 	}
 

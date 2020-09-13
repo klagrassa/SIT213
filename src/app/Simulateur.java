@@ -1,27 +1,17 @@
 package app;
 
-import emetteur.Emetteur;
-import emetteur.EmetteurNRZ;
-import emetteur.EmetteurNRZT;
-import emetteur.EmetteurRZ;
+import emetteurs.Emetteur;
+import emetteurs.EmetteurNRZ;
+import emetteurs.EmetteurNRZT;
+import emetteurs.EmetteurRZ;
+import recepteurs.Recepteur;
 import sources.*;
 import destinations.*;
 import transmetteurs.*;
 
-import information.*;
-
 import visualisations.*;
 
-import java.util.regex.*;
 import java.util.*;
-import java.lang.Math;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * La classe Simulateur permet de construire et simuler une chaîne de
@@ -63,6 +53,8 @@ public class Simulateur {
 	private Source<Boolean> source = null;
 
 	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean,Float>(1f,0f,30);
+
+	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(30);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
 	private Transmetteur transmetteurLogique = null;
 	/** le composant Destination de la chaine de transmission */
@@ -107,25 +99,31 @@ public class Simulateur {
 
 
 
+
 		// Instancier les sondes
 		if (affichage){
 
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
 		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+		SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
 		// Connecter la source é une sonde
 		source.connecter(sondeSource);
 		// Connecter le transmetteur é une sond
-		transmetteurLogique.connecter(emetteur);
-		transmetteurLogique.connecter(sondeDestination);
+
+		transmetteurLogique.connecter(sondeRecepteur);
 		emetteur.connecter(sondeEmetteur);
+		recepteur.connecter(sondeDestination);
 
 		}
-		// Connecter la source au transmetteur
-		source.connecter(transmetteurLogique);
+		source.connecter(emetteur);
+		emetteur.connecter(transmetteurLogique);
+		transmetteurLogique.connecter(recepteur);
+		recepteur.connecter(destination);
 
-		// Connecter le transmetteur é la destination
-		transmetteurLogique.connecter(destination);
+//		// Connecter la source au transmetteur
+//		source.connecter(transmetteurLogique);
+
 	}
 
 	/**
@@ -213,6 +211,8 @@ public class Simulateur {
 				i++;
 				if (args[i].matches("^\\d+$")){
 					emetteur.setPasEchantillonage(Integer.parseInt(args[i]));
+					recepteur.setPasEchantillonnage(Integer.parseInt(args[i]));
+
 				}
 				else throw new ArgumentsException("pas echantillonnage incorect : "+args[i]);
 			}
@@ -230,6 +230,7 @@ public class Simulateur {
 					else {
 						emetteur.setAmpMax(ampMax);
 						emetteur.setAmpMin(ampMin);
+
 					}
 				}
 				else
@@ -252,7 +253,10 @@ public class Simulateur {
 	public void execute() throws Exception {
 
 		source.emettre();
-
+		System.out.println(source.getInformationEmise().nbElements());
+		System.out.println(destination.getInformationRecue().nbElements());
+		System.out.println(source.getInformationEmise().toString());
+		System.out.println(destination.getInformationRecue().toString());
 	}
 
 	/**

@@ -1,10 +1,7 @@
-package emetteur;
+package emetteurs;
 
 import information.Information;
 import information.InformationNonConforme;
-
-import java.util.Iterator;
-import java.util.LinkedList;
 
 public class EmetteurNRZT<R,E> extends Emetteur<R,E> {
 
@@ -23,6 +20,7 @@ public class EmetteurNRZT<R,E> extends Emetteur<R,E> {
     public void recevoir(Information<Boolean> information) throws InformationNonConforme {
         this.informationRecue = information;
         this.informationGenere = new Information<Float>();
+
         Boolean front = null;
         this.delta = ((this.ampMax - ampMin)/2) / ((float)this.pasEchantillonage / 3.0F);
 
@@ -30,41 +28,48 @@ public class EmetteurNRZT<R,E> extends Emetteur<R,E> {
             if (front == null) {
                 front = bitLogique;
                 if (bitLogique == Boolean.TRUE) {
-                    //this.ajouterTransition(((this.ampMax + ampMin)/2), -this.delta);
-                    for(int i = 0; i < (2*this.pasEchantillonage / 3)*(ampMax/(ampMax+Math.abs(ampMin))); ++i) {
+                    for(int i = 0; i < (2*this.pasEchantillonage / 3f)*(ampMax/(ampMax+Math.abs(ampMin))); ++i) {
                         this.informationGenere.add( 0f - this.transition);
                         this.transition += -delta;
                     }
                     this.ajouterSymbole(this.ampMax);
                 } else {
                     //this.ajouterTransition(((this.ampMax + ampMin)/2), this.delta);
-                    for(int i = 0; i < (2*this.pasEchantillonage / 3)*(Math.abs(ampMin)/(ampMax+Math.abs(ampMin))); ++i) {
+                    int balise =0;
+                    for(int i = 0; i < (2*this.pasEchantillonage / 3f)*(Math.abs(ampMin)/(ampMax+Math.abs(ampMin))); ++i) {
                         this.informationGenere.add( 0f - this.transition);
                         this.transition += delta;
+                        balise++;
                     }
+                    while (balise <this.pasEchantillonage / 3){
+                        this.informationGenere.add(this.ampMin);
+                        balise++;}
+
                     this.ajouterSymbole(ampMin);
+
             }} else if (front != bitLogique) {
                 front = bitLogique;
                 if (bitLogique == Boolean.TRUE) {
                     this.transition = 0f;
                     this.ajouterTransition(this.ampMin, -this.delta);
                     this.ajouterTransition(this.ampMin, -this.delta);
-                    ajouterSymbole(ampMax);
+                    this.ajouterSymbole(ampMax);
 
                 } else {
                     this.transition = 0f;
                     this.ajouterTransition(this.ampMax, this.delta);
                     this.ajouterTransition(this.ampMax, this.delta);
-                    ajouterSymbole(ampMin);
+                    this.ajouterSymbole(ampMin);
 
                 }
             } else if (bitLogique == Boolean.TRUE) {
-                this.ajouterSymbole(this.ampMax);
+                for (int i =0;i<3;i++)
+                    this.ajouterSymbole(this.ampMax);
             } else {
-                this.ajouterSymbole(this.ampMin);
+                for (int i =0;i<3;i++)
+                    this.ajouterSymbole(this.ampMin);
             }
         }
-
         this.emettre();
     }
 
