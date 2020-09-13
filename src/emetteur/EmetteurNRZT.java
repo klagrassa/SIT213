@@ -30,13 +30,20 @@ public class EmetteurNRZT<R,E> extends Emetteur<R,E> {
             if (front == null) {
                 front = bitLogique;
                 if (bitLogique == Boolean.TRUE) {
-                    this.ajouterTransition((this.ampMax + ampMin)/2, -delta);
+                    //this.ajouterTransition(((this.ampMax + ampMin)/2), -this.delta);
+                    for(int i = 0; i < (2*this.pasEchantillonage / 3)*(ampMax/(ampMax+Math.abs(ampMin))); ++i) {
+                        this.informationGenere.add( 0f - this.transition);
+                        this.transition += -delta;
+                    }
                     this.ajouterSymbole(this.ampMax);
                 } else {
-                    this.ajouterTransition((this.ampMax + ampMin)/2, delta);
-                    this.ajouterSymbole(this.ampMin);
-            }
-            } else if (front != bitLogique) {
+                    //this.ajouterTransition(((this.ampMax + ampMin)/2), this.delta);
+                    for(int i = 0; i < (2*this.pasEchantillonage / 3)*(Math.abs(ampMin)/(ampMax+Math.abs(ampMin))); ++i) {
+                        this.informationGenere.add( 0f - this.transition);
+                        this.transition += delta;
+                    }
+                    this.ajouterSymbole(ampMin);
+            }} else if (front != bitLogique) {
                 front = bitLogique;
                 if (bitLogique == Boolean.TRUE) {
                     this.transition = 0f;

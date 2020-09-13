@@ -105,7 +105,7 @@ public class Simulateur {
 		// Instancier le transmetteur
 		transmetteurLogique = new TransmetteurParfait<Boolean, Boolean>();
 
-//		Emetteur emetteur = new Emetteur(5f,-5f,30);
+
 
 		// Instancier les sondes
 		if (affichage){
@@ -200,9 +200,11 @@ public class Simulateur {
 
 						case "NRZ" :
 							emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+							break;
 
 						case "NRZT" :
 							emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
+							break;
 					}
 				}  else
 					throw new ArgumentsException("Valeur du parametre -form invalide : " + args[i]);
