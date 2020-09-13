@@ -70,6 +70,11 @@ public class EmetteurNRZT<R,E> extends Emetteur<R,E> {
                     this.ajouterSymbole(this.ampMin);
             }
         }
+        int padding = informationRecue.nbElements()*this.pasEchantillonage;
+        while (informationGenere.nbElements()<padding) {
+            this.informationGenere.add(this.informationGenere.iemeElement(informationGenere.nbElements()-1));
+        }
+
         this.emettre();
     }
 
