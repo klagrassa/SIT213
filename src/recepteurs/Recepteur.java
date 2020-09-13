@@ -16,7 +16,6 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
     public void recevoir(Information<Float> information) throws InformationNonConforme {
         informationRecue = information;
         informationEmise = new Information<Boolean>();
-        System.out.println(informationRecue.nbElements());
         for (int i = pasEchantillonnage/2 ;i<=informationRecue.nbElements();i+=pasEchantillonnage){
             if (informationRecue.iemeElement(i)<=2.5f){
                 informationEmise.add(Boolean.FALSE);}

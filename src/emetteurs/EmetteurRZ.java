@@ -1,5 +1,7 @@
 package emetteurs;
 
+import app.ArgumentsException;
+
 public class EmetteurRZ<R,E> extends Emetteur<R,E> {
 
     /**
@@ -8,6 +10,7 @@ public class EmetteurRZ<R,E> extends Emetteur<R,E> {
      * @param pasEchantillonage nombre d'échantillons pour représenter un symbole
      */
     public EmetteurRZ(Float ampMax, Float ampMin, int pasEchantillonage) {
+
         super(ampMax, ampMin, pasEchantillonage);
     }
 

@@ -1,5 +1,6 @@
 package emetteurs;
 
+import app.ArgumentsException;
 import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
@@ -59,7 +60,9 @@ public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
         this.ampMax = ampMax;
     }
 
-    public void setAmpMin(Float ampMin) {
+    public void setAmpMin(Float ampMin) throws ArgumentsException {
+        if (ampMin!=0f)
+            throw new ArgumentsException("Amplitude min doit être égale à 0, ici amp : "+ampMin);
         this.ampMin = ampMin;
     }
 

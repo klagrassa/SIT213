@@ -191,8 +191,9 @@ public class Simulateur {
 			}
 
 			else if (args[i].matches("-form")){
-				i++;
-				if (args[i].matches("^N?RZT?$")) {
+//				i++;
+				if (args[i+1].matches("^NRZT$|^N?RZ$")) {
+					i++;
 					formString = args[i];
 					switch (args[i]){
 
@@ -204,7 +205,11 @@ public class Simulateur {
 							emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
 							break;
 					}
-				}  else
+				}
+				else if (args[i+1].matches("^-\\w*$")){
+					emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+				}
+				else
 					throw new ArgumentsException("Valeur du parametre -form invalide : " + args[i]);
 			}
 			else if (args[i].matches("-nbEch")){
@@ -217,21 +222,26 @@ public class Simulateur {
 				else throw new ArgumentsException("pas echantillonnage incorect : "+args[i]);
 			}
 			else if (args[i].matches("-ampl")){
-				i++;
+//				i++;
 
-				if (args[i].matches("^-?\\d+.?\\d*$")&&args[i+1].matches("^-?\\d+.?\\d*$")){
-
+				if (args[i+1].matches("^-?\\d+.?\\d*$")&&args[i+2].matches("^-?\\d+.?\\d*$")){
+					i++;
 					ampMin = Float.parseFloat(args[i]);
 					ampMax = Float.parseFloat(args[++i]);
 
-					if (ampMax<ampMin){
+					if (ampMax<ampMin||ampMax<0|ampMin>0){
 						throw new ArgumentsException("Valeur amplitude -ampl impossible : amplitude max : " + ampMax +" amplitude min : "+ampMin);
 					}
 					else {
+
 						emetteur.setAmpMax(ampMax);
 						emetteur.setAmpMin(ampMin);
 
 					}
+				}
+				else if (args[i+1].matches("^-\\w*$")){
+					emetteur.setAmpMax(1f);
+					emetteur.setAmpMin(0f);
 				}
 				else
 					throw new ArgumentsException("Valeur du parametre -ampl invalide : " + args[i]);
@@ -253,10 +263,6 @@ public class Simulateur {
 	public void execute() throws Exception {
 
 		source.emettre();
-		System.out.println(source.getInformationEmise().nbElements());
-		System.out.println(destination.getInformationRecue().nbElements());
-		System.out.println(source.getInformationEmise().toString());
-		System.out.println(destination.getInformationRecue().toString());
 	}
 
 	/**
