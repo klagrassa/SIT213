@@ -47,7 +47,7 @@ public class Simulateur {
 	/** la chaîne de caractères correspondant à m dans l'argument -mess m */
 	private String messageString = "10011111";
 
-	private Boolean formString = false;
+	private Boolean form = false;
 
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
@@ -103,27 +103,33 @@ public class Simulateur {
 		// Instancier les sondes
 		if (affichage){
 
-		sondeSource = new SondeLogique("Sonde source", 200);
-		sondeDestination = new SondeLogique("Sonde destination", 200);
-
-		// Connecter la source é une sonde
-		source.connecter(sondeSource);
-
-		// Connecter le transmetteur é une sond
-		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
-		SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
-		transmetteurLogique.connecter(sondeRecepteur);
-		emetteur.connecter(sondeEmetteur);
-		recepteur.connecter(sondeDestination);
-
+			this.sondeSource = new SondeLogique("Sonde source", 200);
+			this.sondeDestination = new SondeLogique("Sonde destination", 200);
+			this.source.connecter(this.sondeSource);
+			// Connecter les sondes émetteur et récepteur si option -s
+			if (this.form) {
+				SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+				SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
+				this.transmetteurLogique.connecter(sondeRecepteur);
+				this.emetteur.connecter(sondeEmetteur);
+				this.recepteur.connecter(this.sondeDestination);
+			}
+			else {
+				this.transmetteurLogique.connecter(this.sondeDestination);
+			}
 		}
-		source.connecter(emetteur);
-		emetteur.connecter(transmetteurLogique);
-		transmetteurLogique.connecter(recepteur);
-		recepteur.connecter(destination);
-
-//		// Connecter la source au transmetteur
-//		source.connecter(transmetteurLogique);
+		// Connecter émetteur et récepteur à la chaîne de transmission
+		if (this.form) {
+			this.source.connecter(this.emetteur);
+			this.emetteur.connecter(this.transmetteurLogique);
+			this.transmetteurLogique.connecter(this.recepteur);
+			this.recepteur.connecter(this.destination);
+		}
+		// Sinon une chaîne de transmission logique
+		else {
+			this.source.connecter(this.transmetteurLogique);
+			this.transmetteurLogique.connecter(this.destination);
+		}
 
 	}
 
@@ -204,7 +210,7 @@ public class Simulateur {
 			}
 
 			else if (args[i].matches("-form")){
-				formString = true;
+				this.form = true;
 				if (i < args.length-1){
 					i++;
 					if (args[i].matches("^NRZT$|^N?RZ$")) {
