@@ -2,6 +2,16 @@ package emetteurs;
 
 import app.ArgumentsException;
 
+/**
+ * Implémentation de l'émetteur RZ.
+ * Les contraintes et la forme de ce signal sont disponibles dans 
+ * les consignes de l'étape 2.
+ *  
+ * @author Groupe 3
+ *
+ * @param <R> - type de l'information en reception
+ * @param <E> - type de l'information en emission
+ */
 public class EmetteurRZ<R,E> extends Emetteur<R,E> {
 
     /**
