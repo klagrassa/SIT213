@@ -47,14 +47,14 @@ public class Simulateur {
 	/** la chaîne de caractères correspondant à m dans l'argument -mess m */
 	private String messageString = "10011111";
 
-	private String formString = "RZ";
+	private Boolean formString = false;
 
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
 
-	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean,Float>(1f,0f,30);
+	private Emetteur<Boolean,Float> emetteur = null;
 
-	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(30);
+	private Recepteur<Float,Boolean> recepteur = null;
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
 	private Transmetteur transmetteurLogique = null;
 	/** le composant Destination de la chaine de transmission */
@@ -105,12 +105,13 @@ public class Simulateur {
 
 		sondeSource = new SondeLogique("Sonde source", 200);
 		sondeDestination = new SondeLogique("Sonde destination", 200);
-		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
-		SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
+
 		// Connecter la source é une sonde
 		source.connecter(sondeSource);
-		// Connecter le transmetteur é une sond
 
+		// Connecter le transmetteur é une sond
+		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+		SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
 		transmetteurLogique.connecter(sondeRecepteur);
 		emetteur.connecter(sondeEmetteur);
 		recepteur.connecter(sondeDestination);
@@ -194,8 +195,13 @@ public class Simulateur {
 //				i++;
 				if (args[i+1].matches("^NRZT$|^N?RZ$")) {
 					i++;
-					formString = args[i];
+					formString = true;
+					recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 					switch (args[i]){
+
+						case "RZ" :
+							emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+							break;
 
 						case "NRZ" :
 							emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
@@ -229,19 +235,23 @@ public class Simulateur {
 					ampMin = Float.parseFloat(args[i]);
 					ampMax = Float.parseFloat(args[++i]);
 
-					if (ampMax<ampMin||ampMax<0|ampMin>0){
+					if (ampMax<ampMin){
 						throw new ArgumentsException("Valeur amplitude -ampl impossible : amplitude max : " + ampMax +" amplitude min : "+ampMin);
 					}
 					else {
 
 						emetteur.setAmpMax(ampMax);
 						emetteur.setAmpMin(ampMin);
+						recepteur.setAmpMax(ampMax);
+						recepteur.setAmpMin(ampMin);
 
 					}
 				}
 				else if (args[i+1].matches("^-\\w*$")){
 					emetteur.setAmpMax(1f);
 					emetteur.setAmpMin(0f);
+					recepteur.setAmpMax(1f);
+					recepteur.setAmpMin(0f);
 				}
 				else
 					throw new ArgumentsException("Valeur du parametre -ampl invalide : " + args[i]);

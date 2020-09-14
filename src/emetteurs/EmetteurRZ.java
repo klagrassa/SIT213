@@ -27,4 +27,10 @@ public class EmetteurRZ<R,E> extends Emetteur<R,E> {
 
     }
 
+    public void setAmpMin(Float ampMin) throws ArgumentsException {
+        if (ampMin!=0f)
+            throw new ArgumentsException("Amplitude min doit être égale à 0, ici amp : "+ampMin);
+        this.ampMin = ampMin;
+    }
+
 }

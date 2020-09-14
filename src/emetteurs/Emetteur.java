@@ -61,12 +61,14 @@ public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
     }
 
     public void setAmpMin(Float ampMin) throws ArgumentsException {
-        if (ampMin!=0f)
-            throw new ArgumentsException("Amplitude min doit être égale à 0, ici amp : "+ampMin);
+        if (ampMin>0f)
+            throw new ArgumentsException("Amplitude min doit être inférieur ou égale à 0, ici amp : "+ampMin);
         this.ampMin = ampMin;
     }
 
-    public void setPasEchantillonage(int pasEchantillonage) {
+    public void setPasEchantillonage(int pasEchantillonage) throws ArgumentsException {
+        if (ampMax<0f)
+            throw new ArgumentsException("Amplitude max doit être inférieur ou égale à 0, ici amp : "+ampMax);
         this.pasEchantillonage = pasEchantillonage;
     }
 }
