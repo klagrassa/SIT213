@@ -6,6 +6,18 @@ import information.Information;
 import information.InformationNonConforme;
 import transmetteurs.Transmetteur;
 
+/**
+ * Classe mère des emetteurs, elle contient la méthode ajouterSymbole qui 
+ * sera implémentée dans les différentes classes filles.
+ * Les emetteurs sont des types de transmetteurs qui permettent la conversion
+ * d'un signal logique booléen classique en un signal respectant différents protocoles
+ * (RZ, NRZ, NRZT,...)
+ * 
+ * @author Groupe 3
+ *
+ * @param <R> - type de l'information en réception
+ * @param <E> - type de l'information en émission
+ */
 public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
     protected Float ampMax;
     protected Float ampMin;
@@ -45,7 +57,6 @@ public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
      * Ajoute un symbole dans la LinkedList informationGenere
      * @param amp valeur d'amplitude à ajouter
      */
-
     protected abstract void ajouterSymbole(Float amp);
     @Override
     public void emettre() throws InformationNonConforme {

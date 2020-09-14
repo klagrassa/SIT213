@@ -47,7 +47,7 @@ public class Simulateur {
 	/** la chaîne de caractères correspondant à m dans l'argument -mess m */
 	private String messageString = "10011111";
 
-	private Boolean form = false;
+	private Boolean formString = false;
 
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
@@ -100,40 +100,30 @@ public class Simulateur {
 
 
 
-		// Instancier les sondes si l'option -s
+		// Instancier les sondes
 		if (affichage){
 
-			sondeSource = new SondeLogique("Sonde source", 200);
-			sondeDestination = new SondeLogique("Sonde destination", 200);
+		sondeSource = new SondeLogique("Sonde source", 200);
+		sondeDestination = new SondeLogique("Sonde destination", 200);
 
-			// Connecter la source à une sonde
-			source.connecter(sondeSource);
+		// Connecter la source é une sonde
+		source.connecter(sondeSource);
 
-			if (form){
-				// Connecter la source et l'emetteur à une sonde
-				SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
-				SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
-				transmetteurLogique.connecter(sondeRecepteur);
-				emetteur.connecter(sondeEmetteur);
-				recepteur.connecter(sondeDestination);
-			}
-			else {
-				transmetteurLogique.connecter(sondeDestination);
-			}
+		// Connecter le transmetteur é une sond
+		SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+		SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
+		transmetteurLogique.connecter(sondeRecepteur);
+		emetteur.connecter(sondeEmetteur);
+		recepteur.connecter(sondeDestination);
 
 		}
-		// connecter l'émetteur et le récepteur si l'option -form
-		if (form){
-			source.connecter(emetteur);
-			emetteur.connecter(transmetteurLogique);
-			transmetteurLogique.connecter(recepteur);
-			recepteur.connecter(destination);
-		}
-		// sinon chaîne de transmission logique
-		else {
-			source.connecter(transmetteurLogique);
-			transmetteurLogique.connecter(destination);
-		}
+		source.connecter(emetteur);
+		emetteur.connecter(transmetteurLogique);
+		transmetteurLogique.connecter(recepteur);
+		recepteur.connecter(destination);
+
+//		// Connecter la source au transmetteur
+//		source.connecter(transmetteurLogique);
 
 	}
 
@@ -214,7 +204,7 @@ public class Simulateur {
 			}
 
 			else if (args[i].matches("-form")){
-				this.form = true;
+				formString = true;
 				if (i < args.length-1){
 					i++;
 					if (args[i].matches("^NRZT$|^N?RZ$")) {
