@@ -193,30 +193,38 @@ public class Simulateur {
 
 			else if (args[i].matches("-form")){
 //				i++;
-				if (args[i+1].matches("^NRZT$|^N?RZ$")) {
-					i++;
-					formString = true;
-					recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
-					switch (args[i]){
+				try {
+					if (args[i+1].matches("^NRZT$|^N?RZ$")) {
+						i++;
+						formString = true;
+						recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
+						switch (args[i]){
 
-						case "RZ" :
-							emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
-							break;
+							case "RZ" :
+								emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+								break;
 
-						case "NRZ" :
-							emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
-							break;
+							case "NRZ" :
+								emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+								break;
 
-						case "NRZT" :
-							emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
-							break;
+							case "NRZT" :
+								emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
+								break;
+						}
 					}
+					else if (args[i+1].matches("^-\\w*$")){
+						emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+						recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
+					}
+					else
+						throw new ArgumentsException("Valeur du parametre -form invalide : " + args[i]);
 				}
-				else if (args[i+1].matches("^-\\w*$")){
+				catch (ArrayIndexOutOfBoundsException e){
 					emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+					recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 				}
-				else
-					throw new ArgumentsException("Valeur du parametre -form invalide : " + args[i]);
+
 			}
 			else if (args[i].matches("-nbEch")){
 				i++;
@@ -230,31 +238,34 @@ public class Simulateur {
 			else if (args[i].matches("-ampl")){
 //				i++;
 
-				if (args[i+1].matches("^-?\\d+.?\\d*$")&&args[i+2].matches("^-?\\d+.?\\d*$")){
-					i++;
-					ampMin = Float.parseFloat(args[i]);
-					ampMax = Float.parseFloat(args[++i]);
+				try {
+					if (args[i+1].matches("^-?\\d+.?\\d*$")&&args[i+2].matches("^-?\\d+.?\\d*$")){
+						i++;
+						ampMin = Float.parseFloat(args[i]);
+						ampMax = Float.parseFloat(args[++i]);
 
-					if (ampMax<ampMin){
-						throw new ArgumentsException("Valeur amplitude -ampl impossible : amplitude max : " + ampMax +" amplitude min : "+ampMin);
+						if (ampMax<ampMin){
+							throw new ArgumentsException("Valeur amplitude -ampl impossible : amplitude max : " + ampMax +" amplitude min : "+ampMin);
+						}
+						else {
+							emetteur.setAmpMax(ampMax);
+							emetteur.setAmpMin(ampMin);
+							recepteur.setAmpMax(ampMax);
+							recepteur.setAmpMin(ampMin);
+						}
 					}
-					else {
-
-						emetteur.setAmpMax(ampMax);
-						emetteur.setAmpMin(ampMin);
-						recepteur.setAmpMax(ampMax);
-						recepteur.setAmpMin(ampMin);
-
+					else if (args[i+1].matches("^-\\w*$")){
+						emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+						recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 					}
+					else
+						throw new ArgumentsException("Valeur du parametre -ampl invalide : " + args[i]);
 				}
-				else if (args[i+1].matches("^-\\w*$")){
-					emetteur.setAmpMax(1f);
-					emetteur.setAmpMin(0f);
-					recepteur.setAmpMax(1f);
-					recepteur.setAmpMin(0f);
+				catch (ArrayIndexOutOfBoundsException e){
+					emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+					recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 				}
-				else
-					throw new ArgumentsException("Valeur du parametre -ampl invalide : " + args[i]);
+
 
 			}
 			else
