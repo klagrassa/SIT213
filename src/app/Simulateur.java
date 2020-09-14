@@ -46,14 +46,14 @@ public class Simulateur {
 	private int nbBitsMess = 100;
 	/** la chaîne de caractères correspondant à m dans l'argument -mess m */
 	private String messageString = "10011111";
-
+	/** indique si le Simulateur utilise un codage de l'information à émettre */
 	private Boolean form = false;
 
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
-
+	/** Le composant émetteur de la chaine de transmission */
 	private Emetteur<Boolean,Float> emetteur = null;
-
+	/** Le composant récepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = null;
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
 	private Transmetteur transmetteurLogique = null;
@@ -61,7 +61,11 @@ public class Simulateur {
 	private Destination<Boolean> destination = null;
 	/** la composante Sonde pour la source de la chaine de transmission */
 	private Sonde sondeSource = null;
-	/** la composante Sonde pour le transmetteur de la chaine de transmission */
+	/** la composante Sonde pour l'émetteur de la chaine de transmission */
+	private SondeAnalogique sondeEmetteur = null;
+	/** la composante Sonde pour le récepteur de la chaine de transmission */
+	private SondeAnalogique sondeRecepteur = null;
+	/** la composante Sonde pour la destination de la chaine de transmission */
 	private Sonde sondeDestination = null;
 
 	/**
@@ -108,8 +112,8 @@ public class Simulateur {
 			this.source.connecter(this.sondeSource);
 			// Connecter les sondes émetteur et récepteur si option -s
 			if (this.form) {
-				SondeAnalogique sondeEmetteur = new SondeAnalogique("Sonde emetteur");
-				SondeAnalogique sondeRecepteur = new SondeAnalogique("Sonde recepteur");
+				sondeEmetteur = new SondeAnalogique("Sonde emetteur");
+				sondeRecepteur = new SondeAnalogique("Sonde recepteur");
 				this.transmetteurLogique.connecter(sondeRecepteur);
 				this.emetteur.connecter(sondeEmetteur);
 				this.recepteur.connecter(this.sondeDestination);
@@ -118,7 +122,7 @@ public class Simulateur {
 				this.transmetteurLogique.connecter(this.sondeDestination);
 			}
 		}
-		// Connecter émetteur et récepteur à la chaîne de transmission
+		// Connecter émetteur et récepteur à la chaîne de transmission si option -form
 		if (this.form) {
 			this.source.connecter(this.emetteur);
 			this.emetteur.connecter(this.transmetteurLogique);
