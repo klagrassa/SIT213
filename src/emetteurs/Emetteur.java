@@ -56,7 +56,9 @@ public abstract class Emetteur<R,E> extends Transmetteur<Boolean,Float> {
         }
     }
 
-    public void setAmpMax(Float ampMax) {
+    public void setAmpMax(Float ampMax) throws ArgumentsException {
+        if (ampMax<0f)
+            throw new ArgumentsException("Amplitude max doit être inférieur ou égale à 0, ici amp : "+ampMax);
         this.ampMax = ampMax;
     }
 
