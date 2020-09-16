@@ -28,7 +28,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         this.informationEmise = new Information<Float>();
         for (Float amp:informationRecue){
             Double bruit = calculBruit();
-            ajouterValeurFichier(bruit);
+//            ajouterValeurFichier(bruit);
             informationEmise.add((float) (amp+bruit));
         }
         this.emettre();
