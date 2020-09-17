@@ -123,8 +123,8 @@ public class Simulateur {
 			// Connecter les sondes Ã©metteur et rÃ©cepteur si option -s
 			if (this.form) {
 				sondeEmetteur = new SondeAnalogique("Sortie emetteur");
-				sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur");
-				sondeRecepteur = new SondeAnalogique("Sortie Decodeur");
+				sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur avec bruit");
+				sondeRecepteur = new SondeAnalogique("Sortie Transmetteur filté");
 				if (snrPb == null)
 					this.transmetteurParfait.connecter(sondeTransmetteur);
 				else{
