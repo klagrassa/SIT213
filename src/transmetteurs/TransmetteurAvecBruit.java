@@ -16,7 +16,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     private java.lang.Float snrPb;
     private int nbEch;
 
-    public TransmetteurAvecBruit(java.lang.Float snrPb, int nbEch) {
+    public TransmetteurAvecBruit(Float snrPb, int nbEch) {
         super();
         this.snrPb = snrPb;
         this.nbEch =nbEch;
@@ -26,8 +26,10 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     public void recevoir(Information<Float> information) throws InformationNonConforme {
         this.informationRecue = information;
         this.informationEmise = new Information<Float>();
+        Float ps = calculPuissance();
+        Double sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
         for (Float amp:informationRecue){
-            Double bruit = calculBruit();
+            Double bruit = calculBruit(sigmaB);
 //            ajouterValeurFichier(bruit);
             informationEmise.add((float) (amp+bruit));
         }
@@ -52,16 +54,14 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         else return 0f;
     }
 
-    public Double calculBruit(){
-        Float ps = calculPuissance();
-        Double sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
+    public Double calculBruit(Double sigmaB){
         Random generateur = new Random();
         Float a1 = generateur.nextFloat();
         Float a2 = generateur.nextFloat();
         return sigmaB*Math.sqrt((-2*Math.log10(1-a1)))*Math.cos(2*Math.PI*a2);
     }
 
- public void ajouterValeurFichier(double bruit) {
+    public void ajouterValeurFichier(double bruit) {
      BufferedWriter bufWriter = null;
      FileWriter fileWriter = null;
      try{
@@ -74,9 +74,18 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
          bufWriter.close();
          bufWriter.close();
          fileWriter.close();
- }catch (IOException e){
+    }
+     catch (IOException e){
          System.out.println("erreur");
      }
 
- }
+    }
+
+    public void setSnrPb(Float snrPb) {
+        this.snrPb = snrPb;
+    }
+
+    public void setNbEch(int nbEch) {
+        this.nbEch = nbEch;
+    }
 }
