@@ -107,6 +107,7 @@ public class EmetteurNRZT<R, E> extends Emetteur<R, E> {
 				this.transition += (Math.abs(this.ampMin)/ nbEchantillonsPente);
 			}
 		}
+
 		this.emettre();
 	}
 

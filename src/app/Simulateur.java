@@ -296,8 +296,8 @@ public class Simulateur {
 					if (args[i].matches("^-?\\d+.?\\d*$")&&args[i+1].matches("^-?\\d+.?\\d*$")){
 						ampMin = Float.parseFloat(args[i]);
 						ampMax = Float.parseFloat(args[++i]);
-						emetteur.setAmpMax(ampMax);
 						emetteur.setAmpMin(ampMin);
+						emetteur.setAmpMax(ampMax);
 						recepteur.setAmpMax(ampMax);
 						recepteur.setAmpMin(ampMin);
 						decodeur.setAmpMax(ampMax);
