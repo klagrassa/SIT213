@@ -88,11 +88,11 @@ public class Information<T> implements Iterable<T> {
 	 * pour afficher une information
 	 */
 	public String toString() {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < this.nbElements(); i++) {
-			s += " " + this.iemeElement(i);
+			s.append(" ").append(this.iemeElement(i));
 		}
-		return s;
+		return s.toString();
 	}
 
 	/**
