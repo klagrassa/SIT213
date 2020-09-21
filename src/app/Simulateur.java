@@ -126,9 +126,10 @@ public class Simulateur {
 				sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur");
 				sondeRecepteur = new SondeAnalogique("Sortie Transmetteur filtré");
 				if (snrPb == null){
-					sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur avec bruit");
+
 					this.transmetteurParfait.connecter(sondeTransmetteur);}
 				else{
+					sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur avec bruit");
 					this.transmetteurAvecBruit.connecter(sondeTransmetteur);
 					decodeur.connecter(sondeRecepteur);
 				}
