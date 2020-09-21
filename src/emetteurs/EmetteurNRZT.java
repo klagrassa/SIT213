@@ -94,7 +94,19 @@ public class EmetteurNRZT<R, E> extends Emetteur<R, E> {
 				this.ajouterSymbole(this.ampMin, (float) this.pasEchantillonage);
 			}
 		}
-		this.ajouterSymbole(this.informationGenere.iemeElement(informationGenere.nbElements() - 1), nbEchantillonsPente);
+		this.transition = 0f;
+		if (this.informationGenere.iemeElement(informationGenere.nbElements() - 1).equals(this.ampMax)) {
+			for (int i = 0; i < nbEchantillonsPente; ++i) {
+				this.informationGenere.add(this.ampMax + this.transition);
+				this.transition -= (this.ampMax/ nbEchantillonsPente);
+			}
+		}
+		else {
+			for (int i = 0; i < nbEchantillonsPente; ++i) {
+				this.informationGenere.add(this.ampMin + this.transition);
+				this.transition += (Math.abs(this.ampMin)/ nbEchantillonsPente);
+			}
+		}
 		this.emettre();
 	}
 
