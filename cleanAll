@@ -2,3 +2,4 @@
 
 rm -rf bin/*
 rm -rf docs/*
+rm -rf *.tar.*

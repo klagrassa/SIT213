@@ -1,6 +1,6 @@
 # Simulateur de chaîne de transmission
 ## SIT 213
-### TRITARELLI Vincent, LA GRASSA Karl
+### CRIE Bastien, DERIAN Gabriel, DUMONT Elia, LA GRASSA Karl, TRITARELLI Vincent
 v0.1
 
 ## Description

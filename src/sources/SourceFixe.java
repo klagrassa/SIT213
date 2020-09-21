@@ -1,5 +1,8 @@
 package sources;
 
+import java.util.LinkedList;
+
+import destinations.DestinationInterface;
 import information.Information;
 
 /**
@@ -29,5 +32,12 @@ public class SourceFixe<T> extends Source<Boolean> {
 		informationEmise = informationGeneree;
 		
 	}
+	
+	public LinkedList<DestinationInterface<Boolean>> getDestinationConnectes()
+	{
+		return super.destinationsConnectees;
+	}
+	
+	
 
 }
