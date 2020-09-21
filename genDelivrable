@@ -1,4 +1,9 @@
 #!/bin/bash
 
 sh cleanAll
-tar cvzf LA_GRASSA-TRITARELLI.tar.gz .
+tar cvzf CRIE_DERIAN_DUMONT_LA_GRASSA-TRITARELLI.tar.gz .
+rm -rf .git/*
+rm -rf bin/.gitignore
+rm -rf .settings/*
+rm -rf .project
+rm -rf .classpath

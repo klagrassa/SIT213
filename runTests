@@ -1,0 +1,106 @@
+#!/bin/sh
+
+
+# Commandes utilisées pour générer les images utilisées dans le rapport
+
+echo "Tests de validation du projet SIT 213."
+echo "Les tests sans addition de bruit sont automatisés, \nCeux avec devront être vérifiés par l'utilisateur"
+echo "De base les tests sont faits sans les sondes, sauf pour les signaux bruités où elles apparaissent
+obligatoirement. \n -s si vous voulez les sondes pour les simulations numériques non-bruitées"
+
+
+echo "##############################################"
+echo "##### On vérifie que le TEB est égal à 0 #####"
+echo "##############################################"
+
+# Simulation avec message
+#./simulateur -mess 10011111 &
+echo "# Simulation avec message, commande : ./simulateur -mess 10011111"
+java -cp bin tests.TestsValidation -mess 10011111 
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation aléatoire, de taille 100 (par défaut)
+#./simulateur
+echo "# Simulation aléatoire, de taille 100 (par défaut)"
+java -cp bin tests.TestsValidation 
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec message erroné
+#./simulateur -mess 02110011 &
+echo "# Simulation avec message erroné, commande : ./simulateur -mess 02110011 "
+java -cp bin tests.TestsValidation -mess 02110011 
+echo "\n"
+
+# Simulation aléatoire avec taille fixe (32 bits)
+#./simulateur -mess 32 &
+echo "# Simulation aléatoire avec taille fixe 32 bits, commande : ./simulateur -mess 32 "
+java -cp bin tests.TestsValidation -mess 32 
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec semence
+#./simulateur -seed 5120 
+echo "# Simulation avec semence, commande : ./simulateur -seed 5120 "
+java -cp bin tests.TestsValidation -seed 5120 
+echo "\n"
+
+echo "##############################################################"
+echo "##### On vérifie que le TEB est égal à 0 ET VISUELLEMENT #####"
+echo "##############################################################"
+
+# Simulation RZ nominale
+#./simulateur -mess 101010101 -form RZ -ampl -5 5 -s
+echo "# Simulation RZ, commande :./simulateur -mess 101010101 -form RZ -ampl 0 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form RZ -ampl 0 5 $1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation RZ avec amp min négative
+#./simulateur -mess 101010101 -form RZ -ampl -5 5 -s
+echo "# Simulation RZ, commande :./simulateur -mess 101010101 -form RZ -ampl -5 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form RZ -ampl -5 5 $1
+echo "\n"
+
+# Simulation NRZ nominale
+#./simulateur -mess 101010101 -form NRZ -ampl -5 5 -s
+echo "# Simulation NRZ, commande :./simulateur -mess 101010101 -form NRZ -ampl -5 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZ -ampl -5 5 $1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation NRZT
+#./simulateur -mess 101010101 -form NRZT -ampl -5 5 -s
+echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl -5 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZ -ampl -5 5 $1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec un échantillonnage différent d'un multiple de 3
+echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl -5 5 -nbEch 32 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZ -ampl -5 5 -nbEch 32 $1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec amplitude asymmétriques
+echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl -4 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZ -ampl -4 5 $1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+echo "################################################"
+echo "##### Vérifications visuelles uniquement ! #####"
+echo "################################################"
+
+# Simulation avec bruit (SNR = 4)
+echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl -5 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZT -ampl -5 5 -s -snrpb 4
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit (SNR = -4)
+echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl -5 5 -s"
+java -cp bin tests.TestsValidation -mess 101010101 -form NRZT -ampl -5 5 -s -snrpb -4
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
