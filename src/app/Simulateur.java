@@ -254,7 +254,7 @@ public class Simulateur {
 
 							case "NRZT" :
 								emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
-								decodeur = new DecodeurNRZ(ampMax,ampMin,pasEch);
+								decodeur = new DecodeurRZ(ampMax,ampMin,pasEch);
 								break;
 						}
 					}

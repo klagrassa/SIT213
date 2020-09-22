@@ -47,7 +47,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     public Float calculPuissance(){
         Float puissance= 0f;
         for (Float amp : informationRecue ){
-            puissance+= (Float) amp* (Float) amp;
+            puissance+= amp* amp;
         }
         if (informationRecue.nbElements() !=0)
             return puissance/informationRecue.nbElements();
