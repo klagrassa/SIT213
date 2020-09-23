@@ -15,11 +15,20 @@ import java.util.logging.Logger;
 public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     private java.lang.Float snrPb;
     private int nbEch;
+    private int[] decalageTemp = null;
+    private Float[] ar = null;
 
     public TransmetteurAvecBruit(Float snrPb, int nbEch) {
         super();
         this.snrPb = snrPb;
         this.nbEch =nbEch;
+    }
+
+    public TransmetteurAvecBruit(Float snrPb, int nbEch, int[] decalageTemp, Float[] ar) {
+        this.snrPb = snrPb;
+        this.nbEch = nbEch;
+        this.decalageTemp = decalageTemp;
+        this.ar = ar;
     }
 
     @Override
@@ -87,5 +96,14 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
 
     public void setNbEch(int nbEch) {
         this.nbEch = nbEch;
+    }
+
+    public void setDt(int[] decalageTemp) {
+
+        this.decalageTemp = decalageTemp;
+    }
+
+    public void setAr(Float[] ar) {
+        this.ar = ar;
     }
 }
