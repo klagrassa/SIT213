@@ -8,21 +8,16 @@ import transmetteurs.Transmetteur;
 public abstract class Decodeur extends Transmetteur<Float,Float> {
 
     protected int pasEchantillonnage;
-    protected Float ampMax;
-    protected Float ampMin;
+
 
 
     /**
      * Constructeur classique
      *
-     * @param ampMax             - amplitude max du signal attendu
-     * @param ampMin             - amplitude min du signal attendu
      * @param pasEchantillonnage - pas d'échantillonage pour le signal attendu
      */
-    public Decodeur(Float ampMax, Float ampMin, int pasEchantillonnage) {
+    public Decodeur( int pasEchantillonnage) {
         super();
-        this.ampMax = ampMax;
-        this.ampMin =ampMin;
         this.pasEchantillonnage=pasEchantillonnage;
     }
 
@@ -49,11 +44,4 @@ public abstract class Decodeur extends Transmetteur<Float,Float> {
         this.pasEchantillonnage = pasEchantillonnage;
     }
 
-    public void setAmpMax(Float ampMax) {
-        this.ampMax = ampMax;
-    }
-
-    public void setAmpMin(Float ampMin) {
-        this.ampMin = ampMin;
-    }
 }

@@ -4,12 +4,10 @@ public class DecodeurNRZ extends Decodeur {
     /**
      * Constructeur classique
      *
-     * @param ampMax             - amplitude max du signal attendu
-     * @param ampMin             - amplitude min du signal attendu
      * @param pasEchantillonnage - pas d'échantillonage pour le signal attendu
      */
-    public DecodeurNRZ(Float ampMax, Float ampMin, int pasEchantillonnage) {
-        super(ampMax, ampMin, pasEchantillonnage);
+    public DecodeurNRZ( int pasEchantillonnage) {
+        super(pasEchantillonnage);
     }
 
     @Override

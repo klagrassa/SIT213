@@ -65,7 +65,7 @@ public class Simulateur {
 	/** Le composant Ã©metteur de la chaine de transmission */
 	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
 
-	private Decodeur 	decodeur =new DecodeurRZ(ampMax,ampMin,pasEch);
+	private Decodeur 	decodeur =new DecodeurRZ(pasEch);
 	/** Le composant rÃ©cepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
@@ -203,6 +203,8 @@ public class Simulateur {
 				// traiter la valeur associee
 				try {
 					seed = Integer.valueOf(args[i]);
+					transmetteurAvecBruit.setSeed(seed);
+
 				} catch (Exception e) {
 					throw new ArgumentsException("Valeur du parametre -seed  invalide :" + args[i]);
 				}
@@ -238,12 +240,12 @@ public class Simulateur {
 						switch (args[i]){
 							case "NRZ" :
 								emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
-								decodeur = new DecodeurNRZ(ampMax,ampMin,pasEch);
+								decodeur = new DecodeurNRZ(pasEch);
 								break;
 
 							case "NRZT" :
 								emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
-								decodeur = new DecodeurRZ(ampMax,ampMin,pasEch);
+								decodeur = new DecodeurRZ(pasEch);
 								break;
 						}
 					}
@@ -289,8 +291,8 @@ public class Simulateur {
 						emetteur.setAmpMax(ampMax);
 						recepteur.setAmpMax(ampMax);
 						recepteur.setAmpMin(ampMin);
-						decodeur.setAmpMax(ampMax);
-						decodeur.setAmpMin(ampMin);
+//						decodeur.setAmpMax(ampMax);
+//						decodeur.setAmpMin(ampMin);
 
 					}
 					else if (args[i].matches("^-\\w*$")) {
