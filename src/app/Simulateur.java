@@ -26,7 +26,12 @@ import java.util.*;
  *
  */
 public class Simulateur {
-
+	private Float ampMax = 1f;
+	private Float ampMin = 0f;
+	private int pasEch = 30;
+	private  int retardMax =0;
+	private LinkedList<Integer> retard = new LinkedList<Integer>();
+	private LinkedList<Float> amplitude = new LinkedList<>();
 	/** indique si le Simulateur utilise des sondes d'affichage */
 	private boolean affichage = false;
 	/**
@@ -58,15 +63,15 @@ public class Simulateur {
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
 	/** Le composant Ã©metteur de la chaine de transmission */
-	private Emetteur<Boolean,Float> emetteur = null;
+	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
 
-	private Decodeur decodeur = null;
+	private Decodeur 	decodeur =new DecodeurRZ(ampMax,ampMin,pasEch);
 	/** Le composant rÃ©cepteur de la chaine de transmission */
-	private Recepteur<Float,Boolean> recepteur = null;
+	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
 	private Transmetteur<Boolean,Boolean> transmetteurLogique = null;
 	private Transmetteur<Float,Float> transmetteurParfait = null;
-	private TransmetteurAvecBruit<Float,Float> transmetteurAvecBruit = null;
+	private TransmetteurAvecBruit<Float,Float> 	transmetteurAvecBruit = new TransmetteurAvecBruit<Float,Float>(snrPb,pasEch);
 	/** le composant Destination de la chaine de transmission */
 	private Destination<Boolean> destination = null;
 	/** la composante Sonde pour la source de la chaine de transmission */
@@ -97,7 +102,6 @@ public class Simulateur {
 
 		// analyser et rÃ©cupÃ©rer les arguments
 		analyseArguments(args);
-
 		// Instancier la source
 		if (messageAleatoire)
 		{
@@ -126,7 +130,6 @@ public class Simulateur {
 				sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur");
 				sondeRecepteur = new SondeAnalogique("Sortie Transmetteur filtré");
 				if (snrPb == null){
-
 					this.transmetteurParfait.connecter(sondeTransmetteur);}
 				else{
 					sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur avec bruit");
@@ -189,20 +192,6 @@ public class Simulateur {
 	 */
 
 	public void analyseArguments(String[] args) throws ArgumentsException {
-		Float ampMax = 1f;
-		Float ampMin = 0f;
-
-		int pasEch = 30;
-		int messLength = 100;
-
-
-		messageAleatoire = true;
-		nbBitsMess = messLength;
-		emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
-		recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
-		transmetteurAvecBruit = new TransmetteurAvecBruit<Float,Float>(snrPb,pasEch);
-		decodeur =new DecodeurRZ(ampMax,ampMin,pasEch);
-
 		for (int i = 0; i < args.length; i++) {
 
 			if (args[i].matches("-s")) {
@@ -328,6 +317,49 @@ public class Simulateur {
 					}
 				}
 			}
+			else if (args[i].matches("-ti")) {
+				this.form = true;
+				int j = 1;
+				int valeursMax = 5; // nombre de couples de valeurs admis
+				boolean flag = true;
+
+				if (i == args.length || args[i + 1].matches("-\\w*"))
+					throw new ArgumentsException("Pas de paramètres donnés pour -ti");
+				else {
+					do {
+						if ((i + (j + 1)) >= args.length)
+							flag = false;
+						else {
+							if ((valeursMax - 1) < 0)
+								throw new ArgumentsException("Pas plus de 5 couples de paramètres pour -ti");
+							else {
+								if (args[i + j].matches("-\\w*")) {
+									flag = false;
+								} else {
+									if (args[i + j].matches("[1-9][0-9]*")) {
+										if (args[i + (j + 1)].matches("[0-9]+.[0-9]*")) {
+											this.retard.add(Integer.valueOf(args[i + j]));
+											this.amplitude.add(Float.valueOf(args[i + (j + 1)]));
+											j += 2; // on décale de 2 pour retomber sur la prochaine
+											valeursMax--;
+										} else {
+											flag = false;
+											throw new ArgumentsException("L'amplitude doit etre une valeur flottante");
+										}
+									} else {
+										flag = false;
+										throw new ArgumentsException("Le décalage doit etre une valeur entière");
+									}
+								}//end nested else
+
+							}// end else
+						}// end else
+					} while (flag);
+					transmetteurAvecBruit.setAr(amplitude);
+					transmetteurAvecBruit.setDt(retard);
+				}
+			}// end else if -ti
+
 		}
 	}
 	/**
@@ -353,13 +385,14 @@ public class Simulateur {
 		// on rÃ©cupÃ¨re d'abord l'information des sources
 		// source
 		float nbErreur=0;
-		Iterator signalSource = source.getInformationEmise().iterator();
+
 		Iterator signalDestination = destination.getInformationRecue().iterator();
 
-		while (signalDestination.hasNext()){
+		for (Boolean aBoolean : source.getInformationEmise()) {
 
-			if (signalSource.next() != signalDestination.next()) nbErreur++;
+			if (signalDestination.next() != aBoolean) nbErreur++;
 		}
+
 
 		return nbErreur/nbBitsMess;
 	}
