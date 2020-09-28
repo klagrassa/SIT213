@@ -3,20 +3,25 @@ package transmetteurs;
 import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
+import visualisations.SondeAnalogique;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Logger;
 
 
 public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
-    private java.lang.Float snrPb;
+    private Float snrPb;
     private int nbEch;
-    private int[] decalageTemp = null;
-    private Float[] ar = null;
+    private int seed;
+    private LinkedList<Integer> dt = null;
+    private LinkedList<Float> ar = null;
+    Random generateur = new Random();
 
     public TransmetteurAvecBruit(Float snrPb, int nbEch) {
         super();
@@ -24,25 +29,67 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         this.nbEch =nbEch;
     }
 
-    public TransmetteurAvecBruit(Float snrPb, int nbEch, int[] decalageTemp, Float[] ar) {
-        this.snrPb = snrPb;
-        this.nbEch = nbEch;
-        this.decalageTemp = decalageTemp;
-        this.ar = ar;
-    }
 
     @Override
     public void recevoir(Information<Float> information) throws InformationNonConforme {
         this.informationRecue = information;
         this.informationEmise = new Information<Float>();
         Float ps = calculPuissance();
+
         Double sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
-        for (Float amp:informationRecue){
+        if (dt!= null){
+
+            LinkedList<Information<Float>> informationTrajetMultiple =new LinkedList<>();
+            for (int i = 0; i < dt.size(); i++) {
+                informationTrajetMultiple.add(addPadding(i));
+            }
+
+            int compteurBoucle = 0;
+            for (Float amp:informationRecue) {
+                int compteur = 0;
+                for (Information<Float> unTrajet: informationTrajetMultiple) {
+                    unTrajet.add(amp*ar.get(compteur));
+                    compteur++;
+                }
+                informationEmise.add(calculSommeAmp(informationTrajetMultiple,compteurBoucle,amp));
+                Double bruit = calculBruit(sigmaB);
+                informationEmise.setIemeElement(compteurBoucle, informationEmise.iemeElement(compteurBoucle)+Float.parseFloat(String.valueOf(bruit)));
+                compteurBoucle++;
+            }
+            int max =0;
+            Information<Float> cheminsSecondaires = null;
+            for (Information<Float> unTrajet: informationTrajetMultiple) {
+               if (  max < unTrajet.nbElements()){
+                    max = unTrajet.nbElements();
+                    cheminsSecondaires = unTrajet;
+               }
+            }
+            if (max !=0){
+                for (int i = compteurBoucle; i <cheminsSecondaires.nbElements(); i++) {
+                    Double bruit = calculBruit(sigmaB);
+                    informationEmise.add((float) (calculSommeAmp(informationTrajetMultiple, i,0f)+bruit));
+            }}
+//        max =1;
+//        for (Information<Float> unTrajet: informationTrajetMultiple) {
+//            SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteuer" +max);
+//            sonde.recevoir(unTrajet);
+//            max++;
+//        }
+            this.emettre();
+        }
+         else {
+            System.out.println("transmetteur");
+             for (Float amp:informationRecue){
             Double bruit = calculBruit(sigmaB);
 //            ajouterValeurFichier(bruit);
             informationEmise.add((float) (amp+bruit));
         }
         this.emettre();
+        }
+
+
+
+
     }
 
     @Override
@@ -56,18 +103,46 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     public Float calculPuissance(){
         Float puissance= 0f;
         for (Float amp : informationRecue ){
-            puissance+= amp* amp;
+            puissance+= amp*amp;
         }
+
         if (informationRecue.nbElements() !=0)
-            return puissance/informationRecue.nbElements();
+            return puissance/(informationRecue.nbElements());
         else return 0f;
     }
 
     public Double calculBruit(Double sigmaB){
-        Random generateur = new Random();
+
         Float a1 = generateur.nextFloat();
         Float a2 = generateur.nextFloat();
-        return sigmaB*Math.sqrt((-2*Math.log10(1-a1)))*Math.cos(2*Math.PI*a2);
+        return sigmaB*Math.sqrt((-2*Math.log(1-a1)))*Math.cos(2*Math.PI*a2);
+    }
+
+    public Information<Float> addPadding(int decalage){
+        Information<Float> cheminsSecondaires = new Information<>();
+        for (int j=0;j<dt.get(decalage);j++) {
+            cheminsSecondaires.add(0f);
+        }
+        return cheminsSecondaires;
+    }
+    public float calculSommeAmp( LinkedList<Information<Float>> informationTrajetMultiple,int indice, float amp){
+        float ampTot =0f;
+        for (Information<Float> unTrajet:informationTrajetMultiple) {
+            try{
+            ampTot+= unTrajet.iemeElement(indice);}
+            catch (IndexOutOfBoundsException ignored){
+            }
+
+        }
+        return ampTot+amp;
+    }
+    private int determineRetardMax(){
+        int max = 0;
+        for (int value : dt) {
+            if (value > max)
+                max = value;
+        }
+        return max;
     }
 
     public void ajouterValeurFichier(double bruit) {
@@ -98,12 +173,12 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         this.nbEch = nbEch;
     }
 
-    public void setDt(int[] decalageTemp) {
+    public void setDt(LinkedList<Integer> decalageTemp) {
 
-        this.decalageTemp = decalageTemp;
+        this.dt = decalageTemp;
     }
 
-    public void setAr(Float[] ar) {
+    public void setAr(LinkedList<Float> ar) {
         this.ar = ar;
     }
 }
