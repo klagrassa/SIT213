@@ -19,7 +19,10 @@ public class DecodeurNRZ extends Decodeur {
         for(int i=0;i<informationRecue.nbElements();i+=pasEchantillonnage) {
             mean = 0f;
             for (int j=0;j<pasEchantillonnage;j++) {
-                mean += informationRecue.iemeElement(i+j);
+                try{
+                mean += informationRecue.iemeElement(i+j);}
+                catch (IndexOutOfBoundsException ignored){
+                }
             }
             mean = mean/pasEchantillonnage;
             for (int j=0;j<pasEchantillonnage;j++) {
