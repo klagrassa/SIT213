@@ -104,3 +104,49 @@ echo "# Simulation NRZT, commande :./simulateur -mess 101010101 -form NRZT -ampl
 java -cp bin tests.TestsValidation -mess 101010101 -form NRZT -ampl -5 5 -s -snrpb -4
 read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
 echo "\n" 
+
+echo "################################################"
+echo "################### ETAPE 4  ###################"
+echo "################################################"
+
+# Simulation avec bruit et 1 signal aléatoire multitrajet (NRZ)
+echo "# Simulation NRZ, commande :./simulateur -form NRZ -ampl -5 5 -s -ti 2 0.25 "
+java -cp bin tests.TestsValidation -form NRZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 2 signaux aléatoires multitrajets (NRZ)
+echo "# Simulation NRZ, commande :./simulateur -form NRZ -ampl -5 5 -s -ti 2 0.25 5 0.75 "
+java -cp bin tests.TestsValidation -form NRZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25 5 0.75
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 3 signaux aléatoires multitrajets (NRZ)
+echo "# Simulation NRZ, commande :./simulateur -form NRZ -ampl -5 5 -s -ti 2 0.25 5 0.75 10 0.1"
+java -cp bin tests.TestsValidation -form NRZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25 5 0.75 10 0.1
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 4 signaux aléatoires multitrajets (NRZ)
+echo "# Simulation NRZ, commande :./simulateur -form NRZ -ampl -5 5 -s -ti 2 0.25 5 0.75 10 0.1 3 0.34 "
+java -cp bin tests.TestsValidation -form NRZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25 5 0.75 10 0.1 3 0.34
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 5 signaux aléatoires multitrajets (NRZ)
+echo "# Simulation NRZ, commande :./simulateur -form NRZ -ampl -5 5 -s -ti 2 0.25 5 0.75 10 0.1 3 0.34 4 0.5"
+java -cp bin tests.TestsValidation -form NRZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25 5 0.75 10 0.1 3 0.34 4 0.5
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 1 signal aléatoire multitrajet (RZ)
+echo "# Simulation RZ, commande :./simulateur -form RZ -ampl -5 5 -s -ti 2 0.25 "
+java -cp bin tests.TestsValidation -form RZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
+
+# Simulation avec bruit et 1 signal aléatoire multitrajet (NRZT)
+echo "# Simulation RZ, commande :./simulateur -form NRZT -ampl -5 5 -s -ti 2 0.25 "
+java -cp bin tests.TestsValidation -form RZ -ampl -5 5 -s -snrpb 4 -ti 2 0.25
+read -p "Appuyez sur ENTREE pour passer au test suivant !" entree
+echo "\n" 
