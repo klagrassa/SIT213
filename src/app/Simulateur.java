@@ -65,7 +65,7 @@ public class Simulateur {
 	/** Le composant Ã©metteur de la chaine de transmission */
 	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
 
-	private Decodeur 	decodeur =new DecodeurRZ(pasEch);
+	private Decodeur decodeur =new DecodeurRZ(pasEch);
 	/** Le composant rÃ©cepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
@@ -120,7 +120,6 @@ public class Simulateur {
 
 		// Instancier les sondes
 		if (affichage){
-
 			this.sondeSource = new SondeLogique("Source", 200);
 			this.sondeDestination = new SondeLogique("Destination", 200);
 			this.source.connecter(this.sondeSource);
@@ -325,7 +324,7 @@ public class Simulateur {
 				int valeursMax = 5; // nombre de couples de valeurs admis
 				boolean flag = true;
 
-				if (i == args.length || args[i + 1].matches("-\\w*"))
+				if (i+1 == args.length || args[i + 1].matches("-\\w*"))
 					throw new ArgumentsException("Pas de paramètres donnés pour -ti");
 				else {
 					do {
@@ -353,7 +352,6 @@ public class Simulateur {
 										throw new ArgumentsException("Le décalage doit etre une valeur entière");
 									}
 								}//end nested else
-
 							}// end else
 						}// end else
 					} while (flag);
