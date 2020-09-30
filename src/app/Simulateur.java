@@ -1,13 +1,7 @@
 package app;
 
-import emetteurs.Emetteur;
-import emetteurs.EmetteurNRZ;
-import emetteurs.EmetteurNRZT;
-import emetteurs.EmetteurRZ;
-import recepteurs.Decodeur;
-import recepteurs.DecodeurNRZ;
-import recepteurs.DecodeurRZ;
-import recepteurs.Recepteur;
+import emetteurs.*;
+import recepteurs.*;
 import sources.*;
 import destinations.*;
 import transmetteurs.*;
@@ -30,6 +24,7 @@ public class Simulateur {
 	private Float ampMin = 0f;
 	private int pasEch = 30;
 	private  int retardMax =0;
+	private boolean codeur = false;
 	private LinkedList<Integer> retard = new LinkedList<Integer>();
 	private LinkedList<Float> amplitude = new LinkedList<>();
 	/** indique si le Simulateur utilise des sondes d'affichage */
@@ -63,9 +58,11 @@ public class Simulateur {
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
 	/** Le composant Ã©metteur de la chaine de transmission */
-	private Emetteur<Boolean,Float> emetteur = new EmetteurRZ<Boolean, Float>(ampMax,ampMin,pasEch);
+	private Emetteur<Boolean, Float> emetteur = new EmetteurRZ(ampMax,ampMin,pasEch);
 
-	private Decodeur decodeur =new DecodeurRZ(pasEch);
+	private Moyenneur moyenneur =new MoyenneurRZ(pasEch);
+
+	private Transmetteur<Boolean, Boolean> codeurCanal = new Codeur();
 	/** Le composant rÃ©cepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
@@ -86,6 +83,8 @@ public class Simulateur {
 	private SondeAnalogique sondeRecepteur = null;
 	/** la composante Sonde pour la destination de la chaine de transmission */
 	private Sonde sondeDestination = null;
+
+	private  SondeAnalogique sondeCodeurCanal = null;
 
 	/**
 	 * Le constructeur de Simulateur construit une chaÃ®ne de transmission composÃ©e
@@ -112,11 +111,11 @@ public class Simulateur {
 			else source = new SourceAleatoire<Boolean>(nbBitsMess);
 		}
 		else source = new SourceFixe<Boolean>(messageString);
-
+		if (codeur)
+			recepteur = new RecepteurCanal<>(ampMax,ampMin,pasEch);
 		// Instancier la destination
 		destination = new DestinationFinale<Boolean>();
 
-		// Instancier le transmetteur
 
 		// Instancier les sondes
 		if (affichage){
@@ -133,8 +132,9 @@ public class Simulateur {
 				else{
 					sondeTransmetteur = new SondeAnalogique("Sortie Transmetteur avec bruit");
 					this.transmetteurAvecBruit.connecter(sondeTransmetteur);
-					decodeur.connecter(sondeRecepteur);
+					moyenneur.connecter(sondeRecepteur);
 				}
+
 				this.emetteur.connecter(sondeEmetteur);
 				this.recepteur.connecter(this.sondeDestination);
 			}
@@ -144,14 +144,22 @@ public class Simulateur {
 		}
 		// Connecter Ã©metteur et rÃ©cepteur Ã  la chaÃ®ne de transmission si option -form
 		if (this.form) {
-			this.source.connecter(this.emetteur);
+			if (codeur){
+				this.source.connecter(codeurCanal);
+				codeurCanal.connecter(emetteur);
+			}
+			else {
+				this.source.connecter(this.emetteur);
+			}
+
+
 			if (snrPb == null){
 				this.emetteur.connecter(this.transmetteurParfait);
 				this.transmetteurParfait.connecter(this.recepteur);}
 			else{
 				this.emetteur.connecter(this.transmetteurAvecBruit);
-				this.transmetteurAvecBruit.connecter(this.decodeur);
-				this.decodeur.connecter(this.recepteur);
+				this.transmetteurAvecBruit.connecter(this.moyenneur);
+				this.moyenneur.connecter(this.recepteur);
 			}
 
 			this.recepteur.connecter(this.destination);
@@ -239,12 +247,12 @@ public class Simulateur {
 						switch (args[i]){
 							case "NRZ" :
 								emetteur = new EmetteurNRZ<Boolean, Float>(ampMax,ampMin,pasEch);
-								decodeur = new DecodeurNRZ(pasEch);
+								moyenneur = new MoyenneurNRZ(pasEch);
 								break;
 
 							case "NRZT" :
 								emetteur = new EmetteurNRZT<Boolean, Float>(ampMax,ampMin,pasEch);
-								decodeur = new DecodeurRZ(pasEch);
+								moyenneur = new MoyenneurRZ(pasEch);
 								break;
 						}
 					}
@@ -267,7 +275,7 @@ public class Simulateur {
 							emetteur.setPasEchantillonage(pasEch);
 							recepteur.setPasEchantillonnage(pasEch);
 							transmetteurAvecBruit.setNbEch(pasEch);
-							decodeur.setPasEchantillonnage(pasEch);
+							moyenneur.setPasEchantillonnage(pasEch);
 						}
 						else throw new ArgumentsException("pas echantillonnage incorrect il doit être supérieur ou égal à 3: "+args[i]);
 

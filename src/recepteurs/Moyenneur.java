@@ -5,7 +5,7 @@ import information.Information;
 import information.InformationNonConforme;
 import transmetteurs.Transmetteur;
 
-public abstract class Decodeur extends Transmetteur<Float,Float> {
+public abstract class Moyenneur extends Transmetteur<Float,Float> {
 
     protected int pasEchantillonnage;
 
@@ -16,7 +16,7 @@ public abstract class Decodeur extends Transmetteur<Float,Float> {
      *
      * @param pasEchantillonnage - pas d'échantillonage pour le signal attendu
      */
-    public Decodeur( int pasEchantillonnage) {
+    public Moyenneur(int pasEchantillonnage) {
         super();
         this.pasEchantillonnage=pasEchantillonnage;
     }

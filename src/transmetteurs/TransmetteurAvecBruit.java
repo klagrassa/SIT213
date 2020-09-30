@@ -68,12 +68,12 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
                 informationEmise.setIemeElement(compteurBoucle, (float) (amp+bruit));
                 compteurBoucle++;
             }
-        max =1;
-        for (Information<Float> unTrajet: informationTrajetMultiple) {
-            SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteur" +max);
-            sonde.recevoir(unTrajet);
-            max++;
-        }
+//        max =1;
+//        for (Information<Float> unTrajet: informationTrajetMultiple) {
+//            SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteur" +max);
+//            sonde.recevoir(unTrajet);
+//            max++;
+//        }
             this.emettre();
         }
          else {

@@ -17,11 +17,11 @@ import java.util.Arrays;
  * @param <E> - type de l'information en émission
  */
 public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
-    private int pasEchantillonnage;
-    private Float ampMax;
-    private Float ampMin;
-    private int retardMax =0;
-    private Information<Float> informationRegenerer = new Information<>();
+    protected int pasEchantillonnage;
+    protected Float ampMax;
+    protected Float ampMin;
+    protected int retardMax = 0;
+    protected Information<Float> informationRegenerer = new Information<>();
 
     /**
      * Constructeur classique
@@ -34,8 +34,6 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
         this.pasEchantillonnage = pasEchantillonnage;
         this.ampMin =ampMin;
         this.ampMax =ampMax;
-
-
     }
 
     /**
@@ -47,7 +45,7 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
      * @param information - information à décoder.
      */
     @Override
-    public void recevoir(Information<Float> information) throws InformationNonConforme {
+    public void recevoir(Information<Float> information) throws InformationNonConforme{
         informationRecue = information;
         informationEmise = new Information<Boolean>();
 
@@ -60,52 +58,15 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
             if (informationRecue.iemeElement(i) ==null){
                 break;
             }
-           if (informationRecue.iemeElement(i)<=(ampMax+ampMin)/2f){
+            if (informationRecue.iemeElement(i)<=(ampMax+ampMin)/2f){
                 informationEmise.add(Boolean.FALSE);
-           }
-           else informationEmise.add(Boolean.TRUE);
+            }
+            else informationEmise.add(Boolean.TRUE);
         }
         this.emettre();
     }
     
-    public void decoder(Information<Float> information)throws InformationNonConforme{
-    	 informationRecue = information;
-         informationEmise = new Information<Boolean>();
 
-         for (int i = pasEchantillonnage/2 ;i<=informationRecue.nbElements();i+= 3*pasEchantillonnage){
-             if (informationRecue.iemeElement(i) ==null){
-                 break;
-             }
-            if (informationRecue.iemeElement(i)<=(ampMax+ampMin)/2f){
-            	if (informationRecue.iemeElement(i+pasEchantillonnage)<=(ampMax+ampMin)/2f) {
-                	if (informationRecue.iemeElement(i+2*pasEchantillonnage)<=(ampMax+ampMin)/2f) {
-                		informationEmise.add(Boolean.TRUE);
-                	}
-                	else {
-                		informationEmise.add(Boolean.FALSE);
-                	}
-            	}
-            	else {
-                	informationEmise.add(Boolean.TRUE);
-            	}
-            }
-            else {
-            	if (informationRecue.iemeElement(i+pasEchantillonnage)<=(ampMax+ampMin)/2f) {
-                		informationEmise.add(Boolean.FALSE);
-            	}
-            	else {
-                	if (informationRecue.iemeElement(i+2*pasEchantillonnage)<=(ampMax+ampMin)/2f) {
-                		informationEmise.add(Boolean.TRUE);
-                	}
-                	else {
-                		informationEmise.add(Boolean.FALSE);
-                	}
-            	}
-            	
-            }
-         }
-         this.emettre();
-    }
 
     /**
      * Transmet le message décodé vers la destination.

@@ -1,28 +1,28 @@
 package recepteurs;
 
-public class DecodeurNRZ extends Decodeur {
+public class MoyenneurRZ extends Moyenneur {
     /**
      * Constructeur classique
      *
      * @param pasEchantillonnage - pas d'échantillonage pour le signal attendu
      */
-    public DecodeurNRZ( int pasEchantillonnage) {
-        super(pasEchantillonnage);
+    public MoyenneurRZ(int pasEchantillonnage) {
+        super( pasEchantillonnage);
     }
 
     @Override
     protected void decode() {
         Float mean;
-
         for(int i=0;i<informationRecue.nbElements();i+=pasEchantillonnage) {
-            mean = 0f;
-            for (int j=0;j<pasEchantillonnage;j++) {
+            mean = 0F;
+            for (int j=((int)pasEchantillonnage/3);j<(2*pasEchantillonnage)/3F;j++) {
                 try{
-                mean += informationRecue.iemeElement(i+j);}
+                    mean += informationRecue.iemeElement(i+j);}
                 catch (IndexOutOfBoundsException ignored){
                 }
             }
-            mean = mean/pasEchantillonnage;
+            mean = (mean*3)/pasEchantillonnage;
+
             for (int j=0;j<pasEchantillonnage;j++) {
                 informationEmise.add(mean);
             }

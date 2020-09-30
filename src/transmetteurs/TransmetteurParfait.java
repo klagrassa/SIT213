@@ -60,12 +60,12 @@ public class TransmetteurParfait <R,E> extends Transmetteur<R,E> {
 				for (int i = compteurBoucle; i <cheminsSecondaires.nbElements(); i++) {
 					informationEmise.add(calculSommeAmp(informationTrajetMultiple, i,0f));
 				}}
-			max =1;
-			for (Information<Float> unTrajet: informationTrajetMultiple) {
-				SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteur" +max);
-				sonde.recevoir(unTrajet);
-				max++;
-			}
+//			max =1;
+//			for (Information<Float> unTrajet: informationTrajetMultiple) {
+//				SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteur" +max);
+//				sonde.recevoir(unTrajet);
+//				max++;
+//			}
 			this.informationEmise  = (Information<E>) informationEmise;
 
 			this.emettre();

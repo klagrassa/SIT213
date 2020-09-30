@@ -13,7 +13,9 @@ public class Codeur<R,E> extends Transmetteur<Boolean, Boolean> {
     	super();
     }
 	
-	public void recevoir(Information<Boolean> informationRecue) throws InformationNonConforme {
+	public void recevoir(Information<Boolean> information) throws InformationNonConforme {
+    	informationRecue =information;
+    	informationEmise = new Information<Boolean>();
         for (Boolean aBoolean : informationRecue) {
             if (aBoolean == Boolean.TRUE) {
             	informationEmise.add(Boolean.TRUE);
