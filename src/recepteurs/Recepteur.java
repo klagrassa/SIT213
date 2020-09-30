@@ -66,6 +66,45 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
         }
         this.emettre();
     }
+    
+    public void decoder(Information<Float> information)throws InformationNonConforme{
+    	 informationRecue = information;
+         informationEmise = new Information<Boolean>();
+
+         for (int i = pasEchantillonnage/2 ;i<=informationRecue.nbElements();i+= 3*pasEchantillonnage){
+             if (informationRecue.iemeElement(i) ==null){
+                 break;
+             }
+            if (informationRecue.iemeElement(i)<=(ampMax+ampMin)/2f){
+            	if (informationRecue.iemeElement(i+pasEchantillonnage)<=(ampMax+ampMin)/2f) {
+                	if (informationRecue.iemeElement(i+2*pasEchantillonnage)<=(ampMax+ampMin)/2f) {
+                		informationEmise.add(Boolean.TRUE);
+                	}
+                	else {
+                		informationEmise.add(Boolean.FALSE);
+                	}
+            	}
+            	else {
+                	informationEmise.add(Boolean.TRUE);
+            	}
+            }
+            else {
+            	if (informationRecue.iemeElement(i+pasEchantillonnage)<=(ampMax+ampMin)/2f) {
+                		informationEmise.add(Boolean.FALSE);
+            	}
+            	else {
+                	if (informationRecue.iemeElement(i+2*pasEchantillonnage)<=(ampMax+ampMin)/2f) {
+                		informationEmise.add(Boolean.TRUE);
+                	}
+                	else {
+                		informationEmise.add(Boolean.FALSE);
+                	}
+            	}
+            	
+            }
+         }
+         this.emettre();
+    }
 
     /**
      * Transmet le message décodé vers la destination.
