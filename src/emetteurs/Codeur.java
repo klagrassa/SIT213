@@ -1,8 +1,6 @@
-package codeurs;
+package emetteurs;
 
-import java.util.LinkedList;
 
-import app.ArgumentsException;
 import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;
@@ -33,7 +31,7 @@ public class Codeur<R,E> extends Transmetteur<Boolean, Boolean> {
 
 	public void emettre() throws InformationNonConforme {
 		// Ã©mission vers les composants connectÃ©s
-		for (DestinationInterface<E> destinationConnectee : destinationsConnectees) {
+		for (DestinationInterface<Boolean> destinationConnectee : destinationsConnectees) {
 			destinationConnectee.recevoir(informationEmise);
 		}
 	}
