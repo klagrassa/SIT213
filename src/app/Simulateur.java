@@ -69,8 +69,10 @@ public class Simulateur {
 	/** Le composant rÃ©cepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
-	private Transmetteur<Boolean,Boolean> transmetteurLogique = null;
-	private Transmetteur<Float,Float> transmetteurParfait = null;
+
+
+	private Transmetteur<Boolean,Boolean> transmetteurLogique = new TransmetteurParfait<Boolean,Boolean>();
+	private Transmetteur<Float,Float> transmetteurParfait =new  TransmetteurParfait();
 	private TransmetteurAvecBruit<Float,Float> 	transmetteurAvecBruit = new TransmetteurAvecBruit<Float,Float>(snrPb,pasEch);
 	/** le composant Destination de la chaine de transmission */
 	private Destination<Boolean> destination = null;
@@ -115,8 +117,6 @@ public class Simulateur {
 		destination = new DestinationFinale<Boolean>();
 
 		// Instancier le transmetteur
-		transmetteurParfait = new TransmetteurParfait<Float, Float>();
-		transmetteurLogique = new TransmetteurParfait<Boolean, Boolean>();
 
 		// Instancier les sondes
 		if (affichage){
@@ -355,6 +355,8 @@ public class Simulateur {
 							}// end else
 						}// end else
 					} while (flag);
+					transmetteurParfait.setAr(amplitude);
+					transmetteurParfait.setDt(retard);
 					transmetteurAvecBruit.setAr(amplitude);
 					transmetteurAvecBruit.setDt(retard);
 				}

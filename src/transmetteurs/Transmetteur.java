@@ -30,6 +30,8 @@ public abstract class Transmetteur<R, E> implements DestinationInterface<R>, Sou
 	 * l'information émise en sortie du transmetteur
 	 */
 	protected Information<E> informationEmise;
+	protected LinkedList<Integer> dt;
+	protected LinkedList<Float> ar;
 
 	/**
 	 * un constructeur factorisant les initialisations communes aux réalisations de
@@ -89,4 +91,33 @@ public abstract class Transmetteur<R, E> implements DestinationInterface<R>, Sou
 	 * émet l'information construite par le transmetteur
 	 */
 	public abstract void emettre() throws InformationNonConforme;
+
+	protected float calculSommeAmp( LinkedList<Information<Float>> informationTrajetMultiple,int indice, float amp){
+		float ampTot =0f;
+		for (Information<Float> unTrajet:informationTrajetMultiple) {
+			try{
+				ampTot+= unTrajet.iemeElement(indice);
+			}
+			catch (IndexOutOfBoundsException ignored){
+			}
+
+		}
+
+		return  ampTot+amp;
+	}
+	protected Information<Float> addPadding(int decalage){
+		Information<Float> cheminsSecondaires = new Information<>();
+		for (int j=0;j<dt.get(decalage);j++) {
+			cheminsSecondaires.add(0f);
+		}
+		return cheminsSecondaires;
+	}
+
+	public void setDt(LinkedList<Integer> decalageTemp) {
+		this.dt = decalageTemp;
+	}
+
+	public void setAr(LinkedList<Float> ar) {
+		this.ar = ar;
+	}
 }

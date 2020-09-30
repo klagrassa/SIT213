@@ -50,6 +50,7 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
     public void recevoir(Information<Float> information) throws InformationNonConforme {
         informationRecue = information;
         informationEmise = new Information<Boolean>();
+
 //        resynchrSignal();
 //        regenereSiganl();
 //        informationRecue = informationRegenerer;

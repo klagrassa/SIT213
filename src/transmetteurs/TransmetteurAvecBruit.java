@@ -16,8 +16,6 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     private Float snrPb;
     private int nbEch;
     private int seed;
-    private LinkedList<Integer> dt = null;
-    private LinkedList<Float> ar = null;
     Random generateur = new Random();
 
     public TransmetteurAvecBruit(Float snrPb, int nbEch) {
@@ -70,12 +68,12 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
                 informationEmise.setIemeElement(compteurBoucle, (float) (amp+bruit));
                 compteurBoucle++;
             }
-//        max =1;
-//        for (Information<Float> unTrajet: informationTrajetMultiple) {
-//            SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteuer" +max);
-//            sonde.recevoir(unTrajet);
-//            max++;
-//        }
+        max =1;
+        for (Information<Float> unTrajet: informationTrajetMultiple) {
+            SondeAnalogique sonde = new SondeAnalogique("trajet dans transmetteur" +max);
+            sonde.recevoir(unTrajet);
+            max++;
+        }
             this.emettre();
         }
          else {
@@ -115,25 +113,6 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         Float a2 = generateur.nextFloat();
         return sigmaB*Math.sqrt((-2*Math.log(1-a1)))*Math.cos(2*Math.PI*a2);
     }
-
-    public Information<Float> addPadding(int decalage){
-        Information<Float> cheminsSecondaires = new Information<>();
-        for (int j=0;j<dt.get(decalage);j++) {
-            cheminsSecondaires.add(0f);
-        }
-        return cheminsSecondaires;
-    }
-    public float calculSommeAmp( LinkedList<Information<Float>> informationTrajetMultiple,int indice, float amp){
-        float ampTot =0f;
-        for (Information<Float> unTrajet:informationTrajetMultiple) {
-            try{
-            ampTot+= unTrajet.iemeElement(indice);}
-            catch (IndexOutOfBoundsException ignored){
-            }
-
-        }
-        return ampTot+amp;
-    }
     public void ajouterValeurFichier(double bruit) {
      BufferedWriter bufWriter = null;
      FileWriter fileWriter = null;
@@ -166,12 +145,5 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
         generateur = new Random(seed);
     }
 
-    public void setDt(LinkedList<Integer> decalageTemp) {
 
-        this.dt = decalageTemp;
-    }
-
-    public void setAr(LinkedList<Float> ar) {
-        this.ar = ar;
-    }
 }
