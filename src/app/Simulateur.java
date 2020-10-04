@@ -231,7 +231,7 @@ public class Simulateur {
 						if (nbBitsMess < 1)
 							throw new ArgumentsException("Valeur du parametre -mess invalide : " + nbBitsMess);
 					}
-					else if (args[i].matches("^-\\w*$")) {
+					else if (args[i].matches("^-\\w*$")) { 
 						i--;
 					}
 					else
@@ -369,7 +369,15 @@ public class Simulateur {
 					transmetteurAvecBruit.setDt(retard);
 				}
 			}// end else if -ti
-
+			
+			else if (args[i].matches("^-codeur$")) {
+				this.form = true;
+				codeur = true;
+				
+			}// end else if -codeur
+			else {
+				throw new ArgumentsException("Commande incorrecte " + args[i]);
+			}
 		}
 	}
 	/**
