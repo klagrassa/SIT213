@@ -55,6 +55,7 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
 //        SondeAnalogique sonde = new SondeAnalogique("resynchro");
 //        sonde.recevoir(informationRecue);
         for (int i = pasEchantillonnage/2 ;i<=informationRecue.nbElements();i+=pasEchantillonnage){
+            try{
             if (informationRecue.iemeElement(i) ==null){
                 break;
             }
@@ -63,6 +64,8 @@ public class Recepteur<R,E> extends Transmetteur<Float,Boolean> {
             }
             else informationEmise.add(Boolean.TRUE);
         }
+        catch (IndexOutOfBoundsException ignored){}}
+
         this.emettre();
     }
     

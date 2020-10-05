@@ -50,6 +50,7 @@ public class RecepteurCanal<R,E> extends Recepteur<Float,Boolean>  {
          informationEmise = new Information<Boolean>();
 
          for (int i = pasEchantillonnage/2 ;i<=informationRecue.nbElements();i+= 3*pasEchantillonnage){
+         	try{
              if (informationRecue.iemeElement(i) ==null){
                  break;
              }
@@ -80,6 +81,8 @@ public class RecepteurCanal<R,E> extends Recepteur<Float,Boolean>  {
             	}
             	
             }
+         }
+         	catch (IndexOutOfBoundsException ignored){}
          }
 
     }

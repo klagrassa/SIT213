@@ -327,6 +327,7 @@ public class Simulateur {
 				}
 			}
 			else if (args[i].matches("-ti")) {
+
 				this.form = true;
 				int j = 1;
 				int valeursMax = 5; // nombre de couples de valeurs admis
@@ -339,9 +340,11 @@ public class Simulateur {
 						if ((i + (j + 1)) >= args.length)
 							flag = false;
 						else {
+
 							if ((valeursMax - 1) < 0)
 								throw new ArgumentsException("Pas plus de 5 couples de paramètres pour -ti");
 							else {
+
 								if (args[i + j].matches("-\\w*")) {
 									flag = false;
 								} else {
@@ -362,6 +365,7 @@ public class Simulateur {
 								}//end nested else
 							}// end else
 						}// end else
+					i++;
 					} while (flag);
 					transmetteurParfait.setAr(amplitude);
 					transmetteurParfait.setDt(retard);
