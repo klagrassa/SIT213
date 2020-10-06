@@ -15,7 +15,9 @@ import java.util.Random;
 public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     private Float snrPb;
     private int nbEch;
-    private int seed;
+    private Float ps;
+    private Double sigmaB;
+    private Information<Float> puissancebruit= new Information<>();
     Random generateur = new Random();
 
     public TransmetteurAvecBruit(Float snrPb, int nbEch) {
@@ -59,13 +61,14 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
                 for (int i = compteurBoucle; i <cheminsSecondaires.nbElements(); i++) {
                     informationEmise.add((calculSommeAmp(informationTrajetMultiple, i,0f)));
             }}
-            Float ps = calculPuissance(informationEmise);
+            ps = calculPuissance(informationEmise);
 
-            Double sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
+            sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
             compteurBoucle =0;
             for (Float amp :informationEmise) {
-                Double bruit =calculBruit(sigmaB);
-                informationEmise.setIemeElement(compteurBoucle, (float) (amp+bruit));
+                Float bruit = (float)(0.f+calculBruit(sigmaB));
+                puissancebruit.add(bruit);
+                informationEmise.setIemeElement(compteurBoucle,(amp+bruit));
                 compteurBoucle++;
             }
 //        max =1;
@@ -74,17 +77,20 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
 //            sonde.recevoir(unTrajet);
 //            max++;
 //        }
+            affichePerfTransmission();
             this.emettre();
         }
          else {
-            Float ps = calculPuissance(informationRecue);
+            ps = calculPuissance(informationRecue);
 
-            Double sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
+            sigmaB =Math.sqrt((ps*nbEch)/(2*Math.pow(10,(snrPb/10))));
              for (Float amp:informationRecue){
-            Double bruit = calculBruit(sigmaB);
+            Float bruit = (float)(0.f+calculBruit(sigmaB));
+            puissancebruit.add(bruit);
 //            ajouterValeurFichier(bruit);
             informationEmise.add((float) (amp+bruit));
         }
+        affichePerfTransmission();
         this.emettre();
         }
     }
@@ -143,6 +149,16 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
 
     public void setSeed(int seed) {
         generateur = new Random(seed);
+    }
+    public void affichePerfTransmission(){
+        Float pb = calculPuissance(puissancebruit);
+        System.out.println("Puissance moyenne du signal émis : "+ps);
+        System.out.println("Valeur de sigma (ecart-type du bruit) : "+sigmaB);
+        System.out.println("Puissance moyenne du bruit : "+pb);
+        double snr  = 10*Math.log10(ps/pb);
+        double rapportEbN0 = 10*Math.log10((nbEch*ps)/(2*pb));
+        System.out.println("Rapport Eb/N0 recalculé en dB : "+rapportEbN0);
+        System.out.println("Rapport Signal Bruit en dB : "+snr);
     }
 
 
