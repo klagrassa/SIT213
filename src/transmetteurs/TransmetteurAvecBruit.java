@@ -153,7 +153,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
     public void affichePerfTransmission(){
         Float pb = calculPuissance(puissancebruit);
         System.out.println("Puissance moyenne du signal émis : "+ps);
-        System.out.println("Puissance du moyenne du signal reçu : "+calculPuissance(informationEmise));
+        System.out.println("Puissance du moyenne du signal reçu (signal + buit) : "+calculPuissance(informationEmise));
         System.out.println("Valeur de sigma (ecart-type du bruit) : "+sigmaB);
         System.out.println("Puissance moyenne du bruit : "+pb);
         double snr  = 10*Math.log10(ps/pb);
