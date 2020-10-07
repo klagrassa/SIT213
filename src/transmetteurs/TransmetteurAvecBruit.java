@@ -1,6 +1,5 @@
 package transmetteurs;
 
-import com.sun.source.tree.NewArrayTree;
 import destinations.DestinationInterface;
 import information.Information;
 import information.InformationNonConforme;

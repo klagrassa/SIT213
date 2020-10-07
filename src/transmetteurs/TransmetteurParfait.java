@@ -45,7 +45,7 @@ public class TransmetteurParfait <R,E> extends Transmetteur<R,E> {
 					unTrajet.add((Float) amp*ar.get(compteur));
 					compteur++;
 				}
-				informationEmise.add(calculSommeAmp(informationTrajetMultiple,compteurBoucle,(float) amp));
+				informationEmise.add(calculSommeAmp(informationTrajetMultiple,compteurBoucle,(Float) amp));
 				compteurBoucle++;
 			}
 			int max =0;
