@@ -10,6 +10,9 @@ public class MoyenneurRZ extends Moyenneur {
         super( pasEchantillonnage);
     }
 
+    /**
+     * Moyenne un signal bruité avec une forme d'onde RZ et NRZT
+     */
     @Override
     protected void decode() {
         Float mean;

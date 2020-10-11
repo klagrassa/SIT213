@@ -20,13 +20,18 @@ import java.util.*;
  *
  */
 public class Simulateur {
+	/** Valeur d'amplitude max par défault */
 	private Float ampMax = 1f;
+	/** Valeur d'amplitude min par défault */
 	private Float ampMin = 0f;
+	/** Nombre d'échantillons par défault */
 	private int pasEch = 30;
-	private  int retardMax =0;
+	/** indique si le Simulateur utilise un codeur de canal */
 	private boolean codeur = false;
+	/** indique si le Simulateur simule des trajets multiples */
 	private LinkedList<Integer> retard = new LinkedList<Integer>();
 	private LinkedList<Float> amplitude = new LinkedList<>();
+
 	/** indique si le Simulateur utilise des sondes d'affichage */
 	private boolean affichage = false;
 	/**
@@ -52,24 +57,26 @@ public class Simulateur {
 	/** indique si le Simulateur utilise un codage de l'information Ã  Ã©mettre */
 	private Boolean form = false;
 
-
+	/** Rapport eb/N0*/
 	private Float snrPb = null;
 
 	/** le composant Source de la chaine de transmission */
 	private Source<Boolean> source = null;
 	/** Le composant Ã©metteur de la chaine de transmission */
 	private Emetteur<Boolean, Float> emetteur = new EmetteurRZ(ampMax,ampMin,pasEch);
-
+	/** Le composant qui moyenne le signal avec du bruit */
 	private Moyenneur moyenneur =new MoyenneurRZ(pasEch);
-
+	/** Le composant qui Codeur de canal de la chaine de transmission */
 	private Transmetteur<Boolean, Boolean> codeurCanal = new Codeur();
 	/** Le composant rÃ©cepteur de la chaine de transmission */
 	private Recepteur<Float,Boolean> recepteur = new Recepteur<Float, Boolean>(ampMax,ampMin,pasEch);
 	/** le composant Transmetteur parfait logique de la chaine de transmission */
 
-
+	/** Le composant transmetteur Logique parfait de la chaine de transmission */
 	private Transmetteur<Boolean,Boolean> transmetteurLogique = new TransmetteurParfait<Boolean,Boolean>();
+	/** Le composant transmetteur Analogique parfait de la chaine de transmission */
 	private Transmetteur<Float,Float> transmetteurParfait =new  TransmetteurParfait();
+	/** Le composant transmetteur avec génération de bruit de la chaine de transmission */
 	private TransmetteurAvecBruit<Float,Float> 	transmetteurAvecBruit = new TransmetteurAvecBruit<Float,Float>(snrPb,pasEch);
 	/** le composant Destination de la chaine de transmission */
 	private Destination<Boolean> destination = null;
@@ -77,14 +84,12 @@ public class Simulateur {
 	private Sonde sondeSource = null;
 	/** la composante Sonde pour l'Ã©metteur de la chaine de transmission */
 	private SondeAnalogique sondeEmetteur = null;
-
+	/** la composante Sonde pour le transmeteur de la chaine de transmission */
 	private SondeAnalogique sondeTransmetteur = null;
 	/** la composante Sonde pour le rÃ©cepteur de la chaine de transmission */
 	private SondeAnalogique sondeRecepteur = null;
 	/** la composante Sonde pour la destination de la chaine de transmission */
 	private Sonde sondeDestination = null;
-
-	private  SondeAnalogique sondeCodeurCanal = null;
 
 	/**
 	 * Le constructeur de Simulateur construit une chaÃ®ne de transmission composÃ©e
@@ -101,7 +106,7 @@ public class Simulateur {
 	 */
 	public Simulateur(String[] args) throws ArgumentsException {
 
-		// analyser et rÃ©cupÃ©rer les arguments
+		// analyser et récupérer les arguments
 		analyseArguments(args);
 		// Instancier la source
 		if (messageAleatoire)
@@ -111,6 +116,7 @@ public class Simulateur {
 			else source = new SourceAleatoire<Boolean>(nbBitsMess);
 		}
 		else source = new SourceFixe<Boolean>(messageString);
+		//Utiliser le codeur
 		if (codeur)
 			recepteur = new RecepteurCanal<>(ampMax,ampMin,pasEch);
 		// Instancier la destination
@@ -365,7 +371,7 @@ public class Simulateur {
 								}//end nested else
 							}// end else
 						}// end else
-					i++;
+
 					} while (flag);
 					transmetteurParfait.setAr(amplitude);
 					transmetteurParfait.setDt(retard);
@@ -379,7 +385,7 @@ public class Simulateur {
 				codeur = true;
 				
 			}// end else if -codeur
-			else {
+			else if(args[i].matches("-[\\w]*"))  {
 				throw new ArgumentsException("Commande incorrecte " + args[i]);
 			}
 		}

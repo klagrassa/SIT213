@@ -24,7 +24,7 @@ public class TransmetteurParfait <R,E> extends Transmetteur<R,E> {
 
 	/**
 	 * Recoit et renvoie l'information vers la destination
-	 * 
+	 * Traite les trajet multiple si présent
 	 * @param information - information reçue
 	 */
 	@Override
