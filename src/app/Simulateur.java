@@ -385,7 +385,7 @@ public class Simulateur {
 				codeur = true;
 				
 			}// end else if -codeur
-			else if(args[i].matches("-[\\w]*"))  {
+			else if(args[i].matches("-[a-zA-Z]*"))  {
 				throw new ArgumentsException("Commande incorrecte " + args[i]);
 			}
 		}
