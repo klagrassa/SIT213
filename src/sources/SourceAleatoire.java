@@ -16,6 +16,8 @@ public class SourceAleatoire<T> extends Source<Boolean> {
 	
 	/**
 	 * Constructeur par défaut, utilisé si la seed n'est pas précisée
+	 * 
+	 * @param tailleMessage taille du message à générer
 	 */
 	public SourceAleatoire(int tailleMessage) {
 		informationGeneree = new Information<Boolean>();

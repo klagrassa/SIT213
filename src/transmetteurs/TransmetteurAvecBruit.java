@@ -36,7 +36,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
      * puis ajoute le bruit additif gaussien avant d'émettre le message
      * Sinon créer un signal simple avec le bruit additif gaussien 
      * @param information l'information reçue
-     * @throws InformationNonConforme
+     * @throws InformationNonConforme - Si l'information n'est pas dans le format attendu
      */
     @Override
     public void recevoir(Information<Float> information) throws InformationNonConforme {
@@ -128,7 +128,7 @@ public class TransmetteurAvecBruit<R,E> extends Transmetteur<Float,Float> {
 
     /**
      * Envoi l'informationEmise à touts les composants auquels le transmetteur est connecté
-     * @throws InformationNonConforme
+     * @throws InformationNonConforme - Si l'information n'est pas du type attendu
      */
     @Override
     public void emettre() throws InformationNonConforme {

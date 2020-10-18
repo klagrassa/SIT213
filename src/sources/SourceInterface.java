@@ -24,6 +24,7 @@ public interface SourceInterface <T>  {
    
     /**
      * pour émettre l'information contenue dans une source
+     * @throws InformationNonConforme si l'information émise n 'est pas du bon format
      */
     public void emettre() throws InformationNonConforme; 
 }

@@ -93,7 +93,7 @@ public class Simulateur {
 
 	/**
 	 * Le constructeur de Simulateur construit une chaÃ®ne de transmission composÃ©e
-	 * d'une Source <Boolean>, d'une Destination <Boolean> et de Transmetteur(s)
+	 * d'une Source Boolean, d'une Destination Boolean et de Transmetteur(s)
 	 * [voir la mÃ©thode analyseArguments]... <br>
 	 * Les diffÃ©rents composants de la chaÃ®ne de transmission (Source,
 	 * Transmetteur(s), Destination, Sonde(s) de visualisation) sont crÃ©Ã©s et

@@ -20,6 +20,8 @@ public  interface DestinationInterface <T>  {
      * pour recevoir une information de la source qui nous est
      * connectée
      * @param information  l'information  à recevoir
+     * @throws InformationNonConforme si l'informationn reçue n'est pas du 
+     * type attendu
      */
     public void recevoir(Information <T> information) throws InformationNonConforme;
    

@@ -116,6 +116,7 @@ public class EmetteurNRZT<R, E> extends Emetteur<R, E> {
 	 * Ajoute le "plateau" de valeur amp au signal
 	 *
 	 * @param amp - amplitude du "plateau"
+	 * @param nbEchantillonsPalier - nombre d'échantillon par palier
 	 */
 	protected void ajouterSymbole(Float amp, Float nbEchantillonsPalier) {
 		for (int i = 0; i < nbEchantillonsPalier; i++) {
